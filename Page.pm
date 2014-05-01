@@ -4,10 +4,11 @@ use CGI;
 
 sub new {
 	my $class = shift;
-	my $source = shift;
 	my $self = { };
-	my $cgi = new CGI;
+	my $source = shift;
 	$self{source} = $source;
+	$self{root} = shift;
+	my $cgi = new CGI;
 	if (-e $source) {
 		open my $page, "<", $source or die "Can't open $source: $!";
 		my $meta = 1;
