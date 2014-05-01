@@ -1,0 +1,64 @@
+<!-- 1398901021 -->
+<html>
+	<head>
+	<title>Words, Please</title>
+		<link href='http://fonts.googleapis.com/css?family=Bitter:400' rel='stylesheet' type='text/css'>
+		<link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,300' rel='stylesheet' type='text/css'>
+		<link href='themes/Pahgawks/Pahgawks.css' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="http://yandex.st/highlightjs/8.0/styles/tomorrow-night.min.css"><script src="http://yandex.st/highlightjs/8.0/highlight.min.js"></script><script>hljs.initHighlightingOnLoad();</script></head>
+		<body>
+		<div id='title'><h1><a href='http://www.pahgawks.com'>Dave Pagurek</a></h1></div>
+		<div class='section' id='menu'>
+		  <a id='menuLabel' onclick="(document.getElementById('menu').className=='section')?document.getElementById('menu').className='section open':document.getElementById('menu').className='section';">Menu</a>
+		  <div class='wrapper'>
+		    <a href='http://www.pahgawks.com' class='title'>Dave Pagurek</a>
+		      <div id='links'>
+		      <a href='http://www.pahgawks.com'>Home</a>
+		      <a href='http://www.pahgawks.com/about'>About</a>
+		      <a href='http://www.pahgawks.com/blog'>Blog</a>
+		      <a href='http://www.pahgawks.com/archives' class='selected'>Gallery</a>
+		    </div>
+		  </div>
+		</div><div class='section odd'>
+			<div class='wrapper centered'><div class="browser big"><div class="winbutton"></div><div class="winbutton"></div><div class="winbutton"></div><div class="navbar">http://www.pahgawks.com/wordsplease</div><a href="http://www.pahgawks.com/wordsplease"><img src="http://www.pahgawks.com/wp-content/uploads/2014/04/wordsplease.png" /></a></div><p><a class="button" href="http://www.pahgawks.com/wordsplease">View Words, Please</a> <a class="button" href="https://github.com/pahgawk/WordsPlease/">View Source on GitHub</a></p></div>
+			</div>
+<div class='section' id='content'>
+	  <div class='wrapper'>
+<h1>Words, Please</h1>
+<div id='date'>19 April, 2014</div>
+<p>I've been playing the Android game <a href="https://play.google.com/store/apps/details?id=com.concreterose.wordiest" target="_blank">Wordiest</a> recently, which requires making two words out of a hand of letters given to you. Although it might take the fun out of the game, I made a tool that comes up with the longest words that can be made out of a given set of letters. That's what Words, Please is: a Perl script to find all words in a dictionary containing specified letters. A live demo is available at <a href="http://pahgawks.com/wordsplease">http://pahgawks.com/wordsplease</a>.</p>
+<h2>Input</h2>
+<p>WordsPlease works with text files with one word per line.</p>
+<h2>Usage</h2>
+<h3>1. Create an instance of WordsPlease</h3>
+<p>Parameters:</p>
+<p><ol></p>
+<li>Directory: The directory with your dictionary text files</li>
+<li>Word limit (optional): If a limit is specified, WordsPlease stops after finding that amount of words in whatever order they were found in.</li>
+<li>Time limit (optional): If a limit is specified, WordsPlease stops looking after the specified number of seconds.</li>
+<p></ol></p>
+<pre><code>use WordsPlease;
+my $wordsPlease = new WordsPlease(&quot;dictionaries&quot;, 1000, 3);
+</code></pre>
+<p>Word list text files can be downloaded online from your source of choice. The live demo uses the <a href="http://www-01.sil.org/linguistics/wordlists/english/">SIL International list.</a></p>
+<h3>2. Get an array of matched words</h3>
+<p>Parameters:</p>
+<p><ol></p>
+<li>Letters</li>
+<li>Exclusivity (optional, default is 0): If 1, no letters not listed can be in the word</li>
+<li>Match Quantity (optional, default is 0): If 1, only as many of each letter as appear in the letters string can be in the word</li>
+<p></ol></p>
+<pre><code>my @matchedWords = $wordsPlease-&gt;wordsWith(&quot;abcde&quot;, 1, 1);
+</code></pre>
+</div>
+		</div>
+		<div class='section' id='footer'>
+		  <div class='wrapper'>
+		    <p>My name is Dave and I'm an animator, musician, programmer, designer and artist.</p>
+		    <p>Want to get in touch? Find/contact me elsewhere:</p>
+		    <p><a href='mailto:dave@pahgawks.com' class='button'>dave@pahgawks.com</a> <a href='http://davepvm.tumblr.com/' class='button external' target='_blank'>Tumblr</a> <a href='http://pahgawk.deviantart.com/' class='button external' target='_blank'>DeviantART</a> <a href='http://pahgawk.newgrounds.com/' class='button external' target='_blank'>Newgrounds</a> <a href='http://www.youtube.com/pahgawk' class='button external' target='_blank'>YouTube</a> <a href='http://www.twitter.com/davepvm' class='button external' target='_blank'>Twitter</a> <a href='http://pahgawks.bandcamp.com/' class='button external' target='_blank'>Bandcamp</a> <a href='http://soundcloud.com/davidpvm' class='button external' target='_blank'>Soundcloud</a> <a href='https://github.com/pahgawk/' class='button external' target='_blank'>GitHub</a>
+		      </p>
+		    </div>
+		</div>
+		</body>
+		</html>
