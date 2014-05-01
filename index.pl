@@ -4,7 +4,7 @@ use Page;
 
 my %config = do 'config.pl';
 my $query = new CGI;
-my $pageName = $query->param("page") || "xcalc-js";
+my $pageName = $query->param("page") || "webapps/xcalc-js";
 my $source = "content/" . $pageName . ".txt";
 my $sourceCache = "cache/" . $pageName . "_cache.html";
 
@@ -32,8 +32,17 @@ if (-e $sourceCache) {
 }
 
 if ($remake) {
+
+	#make cache subdirectory if it doesn't exist
+	my $dir = "";
+	$dir = $1 if $pageName =~ /^(.*)\/[\w-]/;
+	my $cacheDir = "cache/" . $dir;
+	if (!-d $cacheDir) {
+		mkdir $cacheDir or die "Unable to create $cacheDir";
+	}
+
 	my $content = "<!-- " . time . " -->\n";
-	my $page = new Page($source);
+	my $page = new Page($source, $config{root});
 	$content .= $config{theme}->content($page);
 
 	for (my $i=0; $i<scalar @{$config{plugins}}; $i++) {

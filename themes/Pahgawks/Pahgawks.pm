@@ -23,7 +23,7 @@ sub content {
 		"</title>
 		<link href='http://fonts.googleapis.com/css?family=Bitter:400' rel='stylesheet' type='text/css'>
 		<link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,300' rel='stylesheet' type='text/css'>
-		<link href='themes/Pahgawks/Pahgawks.css' rel='stylesheet' type='text/css'>
+		<link href='" . $page->meta("root") . "/themes/Pahgawks/Pahgawks.css' rel='stylesheet' type='text/css'>
 		</head>
 		<body>
 		<div id='title'><h1><a href='http://www.pahgawks.com'>Dave Pagurek</a></h1></div>
