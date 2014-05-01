@@ -1,0 +1,141 @@
+<!-- 1398902176 -->
+<html>
+	<head>
+	<title>MathSolver and XCalc.js</title>
+		<link href='http://fonts.googleapis.com/css?family=Bitter:400' rel='stylesheet' type='text/css'>
+		<link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,300' rel='stylesheet' type='text/css'>
+		<link href='themes/Pahgawks/Pahgawks.css' rel='stylesheet' type='text/css'>
+		<link rel="stylesheet" href="http://yandex.st/highlightjs/8.0/styles/tomorrow-night.min.css"><script src="http://yandex.st/highlightjs/8.0/highlight.min.js"></script><script>hljs.initHighlightingOnLoad();</script></head>
+		<body>
+		<div id='title'><h1><a href='http://www.pahgawks.com'>Dave Pagurek</a></h1></div>
+		<div class='section' id='menu'>
+		  <a id='menuLabel' onclick="(document.getElementById('menu').className=='section')?document.getElementById('menu').className='section open':document.getElementById('menu').className='section';">Menu</a>
+		  <div class='wrapper'>
+		    <a href='http://www.pahgawks.com' class='title'>Dave Pagurek</a>
+		      <div id='links'>
+		      <a href='http://www.pahgawks.com'>Home</a>
+		      <a href='http://www.pahgawks.com/about'>About</a>
+		      <a href='http://www.pahgawks.com/blog'>Blog</a>
+		      <a href='http://www.pahgawks.com/archives' class='selected'>Gallery</a>
+		    </div>
+		  </div>
+		</div><div class='section odd'>
+			<div class='wrapper centered'><div class="browser big"><div class="winbutton"></div><div class="winbutton"></div><div class="winbutton"></div><div class="navbar">http://www.pahgawks.com/math</div><a href="http://www.pahgawks.com/math"><img src="http://www.pahgawks.com/wp-content/uploads/2013/10/mathsolver.png" /></a></div><p><a class="button" href="http://www.pahgawks.com/math">View MathSolver</a> <a class="button" href="https://github.com/pahgawk/XCalc">View Source on GitHub</a></p></div>
+			</div>
+<div class='section' id='content'>
+	  <div class='wrapper'>
+<h1>MathSolver and XCalc.js</h1>
+<div id='date'>6 October, 2013</div>
+<p>For a little while now, I've thought it would be a fun programming exercise to build a library that reads in a string with a mathematical expression, parse that into some usable data structures, and then process it mathematically. It took me until around a month ago to think of a good way to accomplish that, but once the ball got rolling, everything fit into place nicely, and the whole thing took just a week to make.</p>
+<h2>Using XCalc.js</h2>
+<p>XCalc.js, the Javascript library I made to parse, evaluate, and graph expressions, is <a href="https://github.com/pahgawk/XCalc">available for download on GitHub.</a> Here's how to use it.</p>
+<p>First, include XCalc.js or XCalc.min.js. The minified version is a smaller filesize, but if you want to look at the code and extend it, opt for the full, commented XCalc.js. Both files can be obtained in the <a href="https://github.com/pahgawk/XCalc/releases">releases section of the XCalc GitHub repo.</a></p>
+<pre><code class="html">&lt;script src=&quot;XCalc.min.js&quot;&gt;&lt;/script&gt;
+</code></pre>
+<p>or</p>
+<pre><code class="html">&lt;script src=&quot;XCalc.js&quot;&gt;&lt;/script&gt;
+</code></pre>
+<h3>Expressions</h3>
+<p>Create an XCalc expression like this:</p>
+<pre><code class="javascript">var expression = XCalc.createExpression(&quot;(10^2/(2*50))-2(30x)&quot;);
+</code></pre>
+<p>To get the result of an expression:</p>
+<pre><code class="javascript">var x=2;
+var result = expression.result(x);
+</code></pre>
+<p>If an x value is not specified, x defaults to zero.</p>
+<p>Expressions can be derived as well:</p>
+<pre><code class="javascript">var x=2;
+var rateOfChange = expression.derive().result(x);
+</code></pre>
+<p>To get the formula of an expression as a string with HTML that can be formatted nicely (see the example CSS file):</p>
+<pre><code class="javascript">var formulaDiv = document.createElement(&quot;div&quot;);
+formulaDiv.innerHTML = expression.prettyFormula();
+document.getElementById(&quot;resultDiv&quot;).appendChild(formulaDiv);
+</code></pre>
+<p>To get the formula of an expression as a plaintext string:</p>
+<pre><code class="javascript">var formula = document.createElement(&quot;p&quot;);
+formula.innerHTML = expression.formula();
+document.getElementById(&quot;resultDiv&quot;).appendChild(formula);
+</code></pre>
+<p>To simplify the formula before getting it:</p>
+<pre><code class="javascript">var formula = document.createElement(&quot;p&quot;);
+formula.innerHTML = expression.simplify().formula();
+document.getElementById(&quot;resultDiv&quot;).appendChild(formula);
+</code></pre>
+<h3>Graphs</h3>
+<p>XCalc graphs are created like this:</p>
+<pre><code class="javascript">var graph = XCalc.graphExpression(&quot;x^2&quot;);
+</code></pre>
+<p>To add the graph canvas to the page:</p>
+<pre><code class="javascript">document.getElementById(&quot;result&quot;).appendChild(graph.getCanvas());
+</code></pre>
+<h4>Graph functions</h4>
+<h5>Constructor</h5>
+<p>A new graph is created using the following syntax:</p>
+<pre><code class="javascript">var graph = XCalc.graphExpression(expression, width, height, x1, x2, y1, y2);
+</code></pre>
+<h5>Range</h5>
+<p>Set the range of the graph with:</p>
+<pre><code class="javascript">graph.setRange(x1, x2, y1, y2);
+</code></pre>
+<p>You can get the range of the graph with graph.getX1() or graph.getY2(), which allows you to increment the range of the graph by doing something like this:</p>
+<pre><code class="javascript">graph.setRange(graph.getX1()+5, graph.getX2()-5, graph.getY1()+5, graph.getY2()-5); //zooms in 5px on every side
+</code></pre>
+<h2>Features</h2>
+<h3>Graph Features</h3>
+<ul>
+<li>Dynamic scale</li>
+<li>Auto-range (for y axis)</li>
+<li>Displays coordinates on hover</li>
+<li>Click and drag graph to pan</li>
+<li>Scroll on the graph to zoom in and out</li>
+</ul>
+<h3>Operations Supported</h3>
+<p>As of version 1.9.3.8:</p>
+<ul>
+<li>Addition (x+y)</li>
+<li>Subtraction (x-y)</li>
+<li>Multiplication (x*y or (x)(y))</li>
+<li>Division (x/y)</li>
+<li>Exponents (x^y or x^(1/y) for roots)</li>
+<li>The following functions:
+<ul>
+<li>sin</li>
+<li>cos</li>
+<li>tan</li>
+<li>asin</li>
+<li>acos</li>
+<li>atan</li>
+<li>abs</li>
+<li>log</li>
+<li>ln</li>
+<li>sqrt</li>
+</ul>
+</li>
+<li>The following constants:
+<ul>
+<li>e</li>
+<li>pi</li>
+</ul>
+</li>
+<li>Single variable evaluation (include "x" in the expression string)</li>
+</ul>
+<h3>Algebra and Calculus</h3>
+<ul>
+<li>Create the derivative of an expression</li>
+<li>Simplify an expression</li>
+</ul>
+<p>Full documentation is available in the <a href="https://github.com/pahgawk/XCalc">readme on GitHub.</a></p>
+</div>
+		</div>
+		<div class='section' id='footer'>
+		  <div class='wrapper'>
+		    <p>My name is Dave and I'm an animator, musician, programmer, designer and artist.</p>
+		    <p>Want to get in touch? Find/contact me elsewhere:</p>
+		    <p><a href='mailto:dave@pahgawks.com' class='button'>dave@pahgawks.com</a> <a href='http://davepvm.tumblr.com/' class='button external' target='_blank'>Tumblr</a> <a href='http://pahgawk.deviantart.com/' class='button external' target='_blank'>DeviantART</a> <a href='http://pahgawk.newgrounds.com/' class='button external' target='_blank'>Newgrounds</a> <a href='http://www.youtube.com/pahgawk' class='button external' target='_blank'>YouTube</a> <a href='http://www.twitter.com/davepvm' class='button external' target='_blank'>Twitter</a> <a href='http://pahgawks.bandcamp.com/' class='button external' target='_blank'>Bandcamp</a> <a href='http://soundcloud.com/davidpvm' class='button external' target='_blank'>Soundcloud</a> <a href='https://github.com/pahgawk/' class='button external' target='_blank'>GitHub</a>
+		      </p>
+		    </div>
+		</div>
+		</body>
+		</html>
