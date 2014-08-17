@@ -88,4 +88,12 @@ sub content {
 	return $source;
 }
 
+sub dir {
+	my @pages = ();
+	foreach my $pageFile (glob("$sourceDir/*")) {
+		my $page = new Page($pageFile, $config{root});
+		push(@pages, $page);
+	}
+}
+
 1;

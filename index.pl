@@ -4,8 +4,9 @@ use Page;
 
 my %config = do 'config.pl';
 my $query = new CGI;
-my $pageName = $query->param("page") || "webapps/xcalc-js";
+my $pageName = $query->param("page") || "webapps";
 my $source = "content/" . $pageName . ".txt";
+my $sourceDir = "content/" . $pageName;
 my $sourceCache = "cache/" . $pageName . "_cache.html";
 
 print $query->header("text/html");
@@ -42,11 +43,18 @@ if ($remake) {
 	}
 
 	my $content = "<!-- " . time . " -->\n";
-	my $page = new Page($source, $config{root});
-	$content .= $config{theme}->content($page);
 
-	for (my $i=0; $i<scalar @{$config{plugins}}; $i++) {
-		$content = $config{plugins}[$i]->content($content, $page);
+	if (-e $source) {
+		my $page = new Page($source, $config{root});
+		$content .= $config{theme}->content($page);
+
+		for (my $i=0; $i<scalar @{$config{plugins}}; $i++) {
+			$content = $config{plugins}[$i]->content($content, $page);
+		}
+
+	} elsif (-d $sourceDir) {
+		
+		$content .= $config{theme}->dir($sourceDir);
 	}
 
 	open my $cached, ">", $sourceCache or die "Can't open $sourceCache: $!";
