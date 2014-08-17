@@ -6,4 +6,4 @@ use CodePrettify;
 root => "http://localhost/ManagerialCMS",
 theme => new Pahgawks,
 plugins => [new CodePrettify("tomorrow-night")],
-cacheLife => 0,
+cacheLife => 1000,
