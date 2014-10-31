@@ -5,7 +5,7 @@ use strict;
 
 my %config = do 'config.pl';
 my $query = CGI->new();
-my $pageName = $query->param("page") || "programming/xcalc-js";
+my $pageName = $query->param("page") || "film/the-weight";
 my $source = "content/" . $pageName . ".html";
 my $sourceDir = "content/" . $pageName;
 my $sourceCache = "cache/" . $pageName . "_cache.html";
