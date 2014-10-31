@@ -70,7 +70,6 @@ sub content {
 		}
 		if ($page->meta("buttons")) {
 			$source .= "<p>";
-			#my @buttons = $page->meta("buttons");
 			foreach my $button (@{ $page->meta("buttons") }) {
 				$source .= "<a class='button' href='" . $button->{url} . "'>" . $button->{text} . "</a>";
 			}
@@ -90,10 +89,10 @@ sub content {
 	if ($page->meta("awards")) {
 		my @awards = split(",", $page->meta("awards"));
 		$source .= "<div class='awards_full'>\n<table>\n";
-		for (my $j = 0; $j<scalar @awards; $j+=2) {
+		foreach my $award (@{ $page->meta("awards") }) {
 			$source .= "<tr>
-				<th><div class='" . $awards[$j] . "' title='" . $awards[$j+1] . "''></div></th>
-				<td> " . $awards[$j+1] . "</td>
+				<th><div class='" . $award->{award} . "' title='" . $award->{description} . "''></div></th>
+				<td> " . $award->{description} . "</td>
 				</tr>\n";
 		}
 		$source .= "</table>\n</div>\n";
