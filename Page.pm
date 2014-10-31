@@ -1,24 +1,33 @@
 package Page;
 
 use CGI;
+use JSON;
+use strict;
 
 sub new {
 	my $class = shift;
 	my $self = { };
 	my $source = shift;
-	$self{source} = $source;
-	$self{root} = shift;
-	my $cgi = new CGI;
+	$self->{source} = $source;
+	$self->{root} = shift;
+	my $cgi = CGI->new();
+	my $json = JSON->new->allow_nonref;
 	if (-e $source) {
 		open my $page, "<", $source or die "Can't open $source: $!";
-		my $meta = 1;
+		my $meta = 0;
+		my $metaSource = "";
 		my $content = "";
 		my $isCode = 0;
 		while (<$page>) {
 			chomp;
-			$line = $_;
+			my $line = $_;
 			if (!$isCode) {
 				$line =~ s/^\s+|\s+$//g;
+			}
+
+			if ($line eq "<!--") {
+				$meta = 1;
+				next;
 			}
 
 			#ignore blank lines
@@ -28,12 +37,16 @@ sub new {
 			} elsif ($meta) {
 
 				#Four hash signs indicates the end of the meta section
-				if ($line eq "####") {
+				if ($line eq "-->") {
 					$meta = 0;
+					my $metaJSON = $json->decode($metaSource);
+					foreach my $key (keys %$metaJSON) {
+						$self->{$key} = $metaJSON->{$key};
+					}
 
 				#Add meta values if they exist
-				} elsif ($line =~ /(\w+): *(.+)/) {
-					$self{$1} = $2;
+				} else {
+					$metaSource .= $line;
 				}
 			} else {
 
@@ -61,7 +74,7 @@ sub new {
 			}
 		}
 		close $page or die "can't read close '$page': $!";
-		$self{content} = $content;
+		$self->{content} = $content;
 	}
 
 	bless $self, $class;
@@ -70,13 +83,13 @@ sub new {
 
 sub content {
 	my ($self) = @_;
-	return $self{content};
+	return $self->{content};
 }
 
 sub meta {
 	my ($self, $value) = @_;
-	if (exists $self{$value}) {
-		return $self{$value};
+	if (exists $self->{$value}) {
+		return $self->{$value};
 	} else {
 		return 0;
 	}

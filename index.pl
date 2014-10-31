@@ -1,11 +1,12 @@
-#!C:/xampp2/perl/bin/perl.exe
+#!C:/xampp/perl/bin/perl.exe
 use CGI;
 use Page;
+use strict;
 
 my %config = do 'config.pl';
-my $query = new CGI;
-my $pageName = $query->param("page") || "webapps";
-my $source = "content/" . $pageName . ".txt";
+my $query = CGI->new();
+my $pageName = $query->param("page") || "programming/xcalc-js";
+my $source = "content/" . $pageName . ".html";
 my $sourceDir = "content/" . $pageName;
 my $sourceCache = "cache/" . $pageName . "_cache.html";
 
@@ -42,10 +43,11 @@ if ($remake) {
 		mkdir $cacheDir or die "Unable to create $cacheDir";
 	}
 
-	my $content = "<!-- " . time . " -->\n";
+	print "<!-- " . time . " -->\n";
+	my $content = "";
 
 	if (-e $source) {
-		my $page = new Page($source, $config{root});
+		my $page = Page->new($source, $config{root});
 		$content .= $config{theme}->content($page);
 
 		for (my $i=0; $i<scalar @{$config{plugins}}; $i++) {
@@ -54,7 +56,7 @@ if ($remake) {
 
 	} elsif (-d $sourceDir) {
 		
-		$content .= $config{theme}->dir($sourceDir);
+		$content .= $config{theme}->dir($sourceDir, $config{root});
 	}
 
 	open my $cached, ">", $sourceCache or die "Can't open $sourceCache: $!";
