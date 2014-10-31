@@ -123,10 +123,10 @@ p.column {
   margin-right:20%;
 }
 #me {
-  max-width:100%;
+  max-width:250px;
   height:auto;
-  -webkit-border-radius: 150px;
-  border-radius: 150px;
+  -webkit-border-radius: 20px;
+  border-radius: 20px;
   display:inline-block;
   margin:0;
   vertical-align:middle;
@@ -135,6 +135,7 @@ p.column {
   display:inline-block;
   vertical-align:middle;
   margin:0 40px;
+  max-width:450px;
 }
 .aligncenter {
   width:auto;
@@ -194,6 +195,13 @@ p.column {
 iframe.youtube {
   width:100%;
   height:600px;
+}
+img.art {
+  border:0;
+  display:block;
+  margin:0 auto;
+  max-width:100%;
+  max-height:500px;
 }
 
 /* thumbs */
@@ -269,6 +277,13 @@ iframe.youtube {
   padding:4px;
   height:30px;
 }
+.languages {
+  background-color:#444;
+  font-size:13px;
+  font-style:italic;
+  color:#EEE;
+  padding:10px;
+}
 
 /* awards */
 .awards_full {
@@ -295,7 +310,7 @@ iframe.youtube {
   float:left;
   width:30px;
   height:30px;
-  background-image:url(http://www.pahgawks.com/wp-content/uploads/2012/08/awards.gif);
+  background-image:url(http://www.davepagurek.com/wp-content/uploads/2012/08/awards.gif);
   background-position:0px 0px;
 }
 .first {
@@ -303,7 +318,7 @@ iframe.youtube {
   float:left;
   width:30px;
   height:30px;
-  background-image:url(http://www.pahgawks.com/wp-content/uploads/2012/08/awards.gif);
+  background-image:url(http://www.davepagurek.com/wp-content/uploads/2012/08/awards.gif);
   background-position:-30px 0px;
 }
 .second {
@@ -311,7 +326,7 @@ iframe.youtube {
   float:left;
   width:30px;
   height:30px;
-  background-image:url(http://www.pahgawks.com/wp-content/uploads/2012/08/awards.gif);
+  background-image:url(http://www.davepagurek.com/wp-content/uploads/2012/08/awards.gif);
   background-position:-60px 0px;
 }
 .third {
@@ -319,7 +334,7 @@ iframe.youtube {
   float:left;
   width:30px;
   height:30px;
-  background-image:url(http://www.pahgawks.com/wp-content/uploads/2012/08/awards.gif);
+  background-image:url(http://www.davepagurek.com/wp-content/uploads/2012/08/awards.gif);
   background-position:-90px 0px;
 }
 .fourth {
@@ -327,7 +342,7 @@ iframe.youtube {
   float:left;
   width:30px;
   height:30px;
-  background-image:url(http://www.pahgawks.com/wp-content/uploads/2012/08/awards.gif);
+  background-image:url(http://www.davepagurek.com/wp-content/uploads/2012/08/awards.gif);
   background-position:-120px 0px;
 }
 .fifth {
@@ -335,7 +350,7 @@ iframe.youtube {
   float:left;
   width:30px;
   height:30px;
-  background-image:url(http://www.pahgawks.com/wp-content/uploads/2012/08/awards.gif);
+  background-image:url(http://www.davepagurek.com/wp-content/uploads/2012/08/awards.gif);
   background-position:-150px 0px;
 }
 .review {
@@ -343,7 +358,7 @@ iframe.youtube {
   float:left;
   width:30px;
   height:30px;
-  background-image:url(http://www.pahgawks.com/wp-content/uploads/2012/08/awards.gif);
+  background-image:url(http://www.davepagurek.com/wp-content/uploads/2012/08/awards.gif);
   background-position:-180px 0px;
 }
 .screening {
@@ -351,7 +366,7 @@ iframe.youtube {
   float:left;
   width:30px;
   height:30px;
-  background-image:url(http://www.pahgawks.com/wp-content/uploads/2012/08/awards.gif);
+  background-image:url(http://www.davepagurek.com/wp-content/uploads/2012/08/awards.gif);
   background-position:-210px 0px;
 }
 
@@ -366,9 +381,9 @@ iframe.youtube {
 }
 #header {
   background-color:#c0392b;
-  background-image: url(http://www.pahgawks.com/wp-content/uploads/2013/09/bg2.jpg);
-  background-repeat:repeat-x;
-  background-position:bottom center;
+  background-image: url(http://www.davepagurek.com/wp-content/uploads/2014/08/cliffs-blurred.jpg);
+  background-size:cover;
+  background-position:center;
   color:#FFF;
   padding-bottom:20px;
 }
@@ -378,21 +393,24 @@ iframe.youtube {
 #header h2 {
   margin: 20px 0 20px 0;
 }
+#header a.button {
+  margin:5px;
+}
 #footer {
   background-color: #152330;
-  background-image:url(http://www.pahgawks.com/wp-content/uploads/2013/09/footer1.jpg);
-  background-repeat:repeat-x;
-  background-position: top center;
+  background-image:url(http://www.davepagurek.com/wp-content/uploads/2014/08/sky-blurred1.jpg);
+  background-size: cover;
+  background-position: center;
   color:#FFF;
 }
 #footer a.button {
-  background-color:#34495e;
+  background-color:#0d122c;
   font-size:0.8em;
   padding:8px;
   margin: 5px 3px 10px 0;
 }
 #footer a.button:hover {
-  background-color:#455A6F;
+  background-color:#151b41;
 }
 #footer a.button:last-child, #contact a.button:last-child {
   margin-right:0;
@@ -462,16 +480,15 @@ iframe.youtube {
   display:none !important;
 }
 #video {
-  background-color: #2c3e50;
+  background-color: #0d122c;
   text-align:center;
 }
 
-/* hljs padding */
 .hljs {
   padding: 20px !important;
-  -webkit-border-radius: 10px;
-  border-radius: 10px;
-  overflow-x:auto;
+  -webkit-border-radius: 10px;    
+  border-radius: 10px;    
+  overflow-x:auto;    
 }
 
 /* Responsive */
@@ -618,7 +635,7 @@ iframe.youtube {
     transition: height 0.2s ease-out;
   }
   #menu.open .wrapper {
-    height:200px;
+    height:130px;
   }
   #menuLabel {
     display:block !important;
@@ -672,100 +689,100 @@ iframe.youtube {
 
 /* Animations */
 .animated{-webkit-animation-fill-mode:both;-moz-animation-fill-mode:both;-ms-animation-fill-mode:both;-o-animation-fill-mode:both;animation-fill-mode:both;-webkit-animation-duration:0.5s;-moz-animation-duration:0.5s;-ms-animation-duration:0.5s;-o-animation-duration:0.5s;animation-duration:0.5s;}.animated.hinge{-webkit-animation-duration:0.5s;-moz-animation-duration:0.5s;-ms-animation-duration:0.5s;-o-animation-duration:0.5s;animation-duration:0.5s;}@-webkit-keyframes slideInDown {
-	0% {
-		opacity: 0;
-		-webkit-transform: translateY(-2000px);
-	}	100% {
-		-webkit-transform: translateY(0);
-	}
+  0% {
+    opacity: 0;
+    -webkit-transform: translateY(-2000px);
+  } 100% {
+    -webkit-transform: translateY(0);
+  }
 }
 
 @-moz-keyframes slideInDown {
-	0% {
-		opacity: 0;
-		-moz-transform: translateY(-2000px);
-	}
+  0% {
+    opacity: 0;
+    -moz-transform: translateY(-2000px);
+  }
 
-	100% {
-		-moz-transform: translateY(0);
-	}
+  100% {
+    -moz-transform: translateY(0);
+  }
 }
 
 @-o-keyframes slideInDown {
-	0% {
-		opacity: 0;
-		-o-transform: translateY(-2000px);
-	}
+  0% {
+    opacity: 0;
+    -o-transform: translateY(-2000px);
+  }
 
-	100% {
-		-o-transform: translateY(0);
-	}
+  100% {
+    -o-transform: translateY(0);
+  }
 }
 
 @keyframes slideInDown {
-	0% {
-		opacity: 0;
-		transform: translateY(-2000px);
-	}
+  0% {
+    opacity: 0;
+    transform: translateY(-2000px);
+  }
 
-	100% {
-		transform: translateY(0);
-	}
+  100% {
+    transform: translateY(0);
+  }
 }
 
 .slideInDown {
-	-webkit-animation-name: slideInDown;
-	-moz-animation-name: slideInDown;
-	-o-animation-name: slideInDown;
-	animation-name: slideInDown;
+  -webkit-animation-name: slideInDown;
+  -moz-animation-name: slideInDown;
+  -o-animation-name: slideInDown;
+  animation-name: slideInDown;
 }
 @-webkit-keyframes slideInLeft {
-	0% {
-		opacity: 0;
-		-webkit-transform: translateX(-2000px);
-	}
-	
-	100% {
-		-webkit-transform: translateX(0);
-	}
+  0% {
+    opacity: 0;
+    -webkit-transform: translateX(-2000px);
+  }
+  
+  100% {
+    -webkit-transform: translateX(0);
+  }
 }
 
 @-moz-keyframes slideInLeft {
-	0% {
-		opacity: 0;
-		-moz-transform: translateX(-2000px);
-	}
-	
-	100% {
-		-moz-transform: translateX(0);
-	}
+  0% {
+    opacity: 0;
+    -moz-transform: translateX(-2000px);
+  }
+  
+  100% {
+    -moz-transform: translateX(0);
+  }
 }
 
 @-o-keyframes slideInLeft {
-	0% {
-		opacity: 0;
-		-o-transform: translateX(-2000px);
-	}
-	
-	100% {
-		-o-transform: translateX(0);
-	}
+  0% {
+    opacity: 0;
+    -o-transform: translateX(-2000px);
+  }
+  
+  100% {
+    -o-transform: translateX(0);
+  }
 }
 
 @keyframes slideInLeft {
-	0% {
-		opacity: 0;
-		transform: translateX(-2000px);
-	}
-	
-	100% {
-		transform: translateX(0);
-	}
+  0% {
+    opacity: 0;
+    transform: translateX(-2000px);
+  }
+  
+  100% {
+    transform: translateX(0);
+  }
 }
 
 .slideInLeft {
-	-webkit-animation-name: slideInLeft;
-	-moz-animation-name: slideInLeft;
-	-o-animation-name: slideInLeft;
-	animation-name: slideInLeft;
+  -webkit-animation-name: slideInLeft;
+  -moz-animation-name: slideInLeft;
+  -o-animation-name: slideInLeft;
+  animation-name: slideInLeft;
 }
