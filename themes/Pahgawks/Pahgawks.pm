@@ -112,7 +112,7 @@ sub content {
 }
 
 sub dir {
-	my ($self, $root, @pages) = @_;
+	my ($self, $category, $root) = @_;
 	my $source = "";
 	
 	my $title = "Test";
@@ -153,7 +153,7 @@ sub dir {
 
 	my $oldYear = 0;
 	my $yearNum = 0;
-	foreach my $page (@pages) {
+	foreach my $page (@{ $category->info("pages") }) {
 		if ($yearNum != $page->meta("date")->year) {
 			$oldYear = $page->meta("date")->year;
 			$yearNum++;
