@@ -1,6 +1,7 @@
 #!C:/xampp/perl/bin/perl.exe
 use CGI;
 use Page;
+use Category;
 use strict;
 
 my %config = do 'config.pl';
@@ -56,12 +57,9 @@ if ($remake) {
 
 	} elsif (-d $sourceDir) {
 
-		my @pages = ();
-		foreach my $pageFile (glob("$sourceDir/*")) {
-			push(@pages, Page->new($pageFile, $config{root}, 1));
-		}
+		my $category = Category->new($sourceDir, $config{root});
 		
-		$content .= $config{theme}->dir($config{root}, @pages);
+		$content .= $config{theme}->dir($category, $config{root});
 	}
 
 	open my $cached, ">", $sourceCache or die "Can't open $sourceCache: $!";
