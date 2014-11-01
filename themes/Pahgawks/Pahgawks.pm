@@ -112,19 +112,17 @@ sub content {
 }
 
 sub dir {
-	my ($self, $category, $root) = @_;
+	my ($self, $category) = @_;
 	my $source = "";
-	
-	my $title = "Test";
 
 	$source .= "<html>
 	<head>
 	<title>" .
-		$title . 
+		$category->info("name") . 
 		"</title>
 		<link href='http://fonts.googleapis.com/css?family=Bitter:400' rel='stylesheet' type='text/css'>
 		<link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,300' rel='stylesheet' type='text/css'>
-		<link href='" . $root . "/themes/Pahgawks/Pahgawks.css' rel='stylesheet' type='text/css'>
+		<link href='" . $category->info("root") . "/themes/Pahgawks/Pahgawks.css' rel='stylesheet' type='text/css'>
 		</head>
 		<body>
 		<div id='title'><h1><a href='http://www.pahgawks.com'>Dave Pagurek</a></h1></div>
@@ -141,7 +139,7 @@ sub dir {
 		</div>
 		<div class='section top' id='content'>
 		<div class='wrapper'>
-		<h1 class='cat'>" . $title . "</h1>
+		<h1 class='cat'>" . $category->info("name") . "</h1>
 		<p>
 		<a href='http://www.davepagurek.com/film' class='cat'>Animation</a>
 		<a href='http://www.davepagurek.com/programming' class='cat'>Programming</a>
