@@ -2,14 +2,19 @@ package Page;
 
 use CGI;
 use JSON;
+use Time::Piece;
 use strict;
 
 sub new {
 	my $class = shift;
 	my $self = { };
 	my $source = shift;
+	my $url = $source;
+	$url =~ s/^content\/(.*).html$/$1/;
 	$self->{source} = $source;
+	$self->{url} = $url;
 	$self->{root} = shift;
+	my $onlyMeta = shift;
 	my $cgi = CGI->new();
 	my $json = JSON->new->allow_nonref;
 	if (-e $source) {
@@ -43,6 +48,13 @@ sub new {
 					foreach my $key (keys %$metaJSON) {
 						$self->{$key} = $metaJSON->{$key};
 					}
+					if ($self->{date}) {
+						$self->{date} = Time::Piece->strptime($self->{date}, "%Y-%m-%d");
+					}
+
+					if ($onlyMeta) {
+						last;
+					}
 
 				#Add meta values if they exist
 				} else {
@@ -74,7 +86,9 @@ sub new {
 			}
 		}
 		close $page or die "can't read close '$page': $!";
-		$self->{content} = $content;
+		if (!$onlyMeta) {
+			$self->{content} = $content;
+		}
 	}
 
 	bless $self, $class;

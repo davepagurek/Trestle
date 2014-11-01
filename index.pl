@@ -5,7 +5,7 @@ use strict;
 
 my %config = do 'config.pl';
 my $query = CGI->new();
-my $pageName = $query->param("page") || "film/the-weight";
+my $pageName = $query->param("page") || "programming";
 my $source = "content/" . $pageName . ".html";
 my $sourceDir = "content/" . $pageName;
 my $sourceCache = "cache/" . $pageName . "_cache.html";
@@ -55,8 +55,13 @@ if ($remake) {
 		}
 
 	} elsif (-d $sourceDir) {
+
+		my @pages = ();
+		foreach my $pageFile (glob("$sourceDir/*")) {
+			push(@pages, Page->new($pageFile, $config{root}, 1));
+		}
 		
-		$content .= $config{theme}->dir($sourceDir, $config{root});
+		$content .= $config{theme}->dir($config{root}, @pages);
 	}
 
 	open my $cached, ">", $sourceCache or die "Can't open $sourceCache: $!";
