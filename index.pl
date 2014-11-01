@@ -59,7 +59,7 @@ if ($remake) {
 
 		my $category = Category->new($sourceDir, $config{root});
 		
-		$content .= $config{theme}->dir($category, $config{root});
+		$content .= $config{theme}->dir($category);
 	}
 
 	open my $cached, ">", $sourceCache or die "Can't open $sourceCache: $!";
