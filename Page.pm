@@ -26,11 +26,14 @@ sub new {
 		while (<$page>) {
 			chomp;
 			my $line = $_;
+			$line =~ s/\R//g;
 			if (!$isCode) {
 				$line =~ s/^\s+|\s+$//g;
 			}
 
-			if ($line eq "<!--") {
+			#print $line . " END\n";
+
+			if ($line =~ /<!--/) {
 				$meta = 1;
 				next;
 			}
@@ -42,13 +45,14 @@ sub new {
 			} elsif ($meta) {
 
 				#Four hash signs indicates the end of the meta section
-				if ($line eq "-->") {
+				if ($line =~ /^-->/) {
 					$meta = 0;
 					my $metaJSON = $json->decode($metaSource);
 					foreach my $key (keys %$metaJSON) {
 						$self->{$key} = $metaJSON->{$key};
 					}
 					if ($self->{date}) {
+						use Data::Dumper;
 						$self->{date} = Time::Piece->strptime($self->{date}, "%Y-%m-%d");
 					}
 
@@ -58,7 +62,7 @@ sub new {
 
 				#Add meta values if they exist
 				} else {
-					$metaSource .= $line;
+					$metaSource .= $line . "\n";
 				}
 			} else {
 
@@ -67,7 +71,7 @@ sub new {
 					$isCode = 1;
 					$content .= $1;
 					if ($2) {
-						$content .= $cgi->escapeHTML($2);
+						$content .= $cgi->escapeHTML($2) . "\n";
 					}
 				} elsif ($isCode) {
 					if ($line =~ /(.*)(<\/(?:code|pre).*)/) {
@@ -90,6 +94,9 @@ sub new {
 			$self->{content} = $content;
 		}
 	}
+
+	# use Data::Dumper;
+	# print Dumper $self;
 
 	bless $self, $class;
 	return $self;

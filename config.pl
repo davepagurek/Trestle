@@ -3,7 +3,7 @@ use Pahgawks;
 use lib "plugins/CodePrettify";
 use CodePrettify;
 
-root => "http://localhost/ManagerialCMS",
+root => "http://localhost/Trestle",
 theme => Pahgawks->new(),
 plugins => [CodePrettify->new("tomorrow-night")],
-cacheLife => 0,
+cacheLife => 0, 

@@ -152,7 +152,7 @@ sub dir {
 	my $oldYear = 0;
 	my $yearNum = 0;
 	foreach my $page (@{ $category->info("pages") }) {
-		if ($yearNum != $page->meta("date")->year) {
+		if ($oldYear != $page->meta("date")->year) {
 			$oldYear = $page->meta("date")->year;
 			$yearNum++;
 			$source .= "</div>
