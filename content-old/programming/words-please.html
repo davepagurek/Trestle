@@ -1,33 +1,32 @@
-
 <!--
 {
 	"title": "Words, Please",
+	"date": "2014-04-19",
 	"excerpt": "Find all the words that can be made with a set of letters.",
 	"thumbnail": "http://www.davepagurek.com/wp-content/uploads/2014/04/wordsplease-220x220.png",
-	"category": "programming",
 	"languages": [
 		"HTML",
 		"CSS",
-		"Perl" 
+		"Perl"
 	],
 	"browser": {
-		"url": "http://www.davepagurek.com/wordsplease",
-		"image": "http://www.davepagurek.com/wp-content/uploads/2014/04/wordsplease.png"
+		"url": "http://www.pahgawks.com/wordsplease",
+		"image": "http://www.pahgawks.com/wp-content/uploads/2014/04/wordsplease.png"
 	},
 	"buttons": [
 		{
-			"url": "http://www.davepagurek.com/wordsplease",
+			"url": "http://www.pahgawks.com/wordsplease",
 			"text": "View Words, Please"
-		},		{
+		},
+		{
 			"url": "https://github.com/pahgawk/WordsPlease/",
 			"text": "View Source on GitHub"
-		} 
-	],
-	"date": "2014-04-19"
+		}
+	]
 }
 -->
 
-I've been playing the Android game <a href="https://play.google.com/store/apps/details?id=com.concreterose.wordiest" target="_blank">Wordiest</a> recently, which requires making two words out of a hand of letters given to you. Although it might take the fun out of the game, I made a tool that comes up with the longest words that can be made out of a given set of letters. That's what Words, Please is: a Perl script to find all words in a dictionary containing specified letters. A live demo is available at <a href="http://davepagurek.com/wordsplease">http://davepagurek.com/wordsplease</a>.
+I've been playing the Android game <a href="https://play.google.com/store/apps/details?id=com.concreterose.wordiest" target="_blank">Wordiest</a> recently, which requires making two words out of a hand of letters given to you. Although it might take the fun out of the game, I made a tool that comes up with the longest words that can be made out of a given set of letters. That's what Words, Please is: a Perl script to find all words in a dictionary containing specified letters. A live demo is available at <a href="http://pahgawks.com/wordsplease">http://pahgawks.com/wordsplease</a>.
 
 <h2>Input</h2>
 WordsPlease works with text files with one word per line.
@@ -57,4 +56,3 @@ Parameters:
 <code lang="perl">
 my @matchedWords = $wordsPlease->wordsWith("abcde", 1, 1);
 </code>
-
