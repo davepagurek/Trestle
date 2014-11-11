@@ -44,10 +44,11 @@ if ($remake) {
 		mkdir $cacheDir or die "Unable to create $cacheDir";
 	}
 
-	print "<!-- " . time . " -->\n";
 	my $content = "";
+	my $cache = 0;
 
 	if (-e $source) {
+		$cache = 1;
 		my $page = Page->new($source, $config{root});
 		$content .= $config{theme}->content($page);
 
@@ -56,15 +57,21 @@ if ($remake) {
 		}
 
 	} elsif (-d $sourceDir) {
-
+		$cache = 1;
 		my $category = Category->new($sourceDir, $config{root});
 		
 		$content .= $config{theme}->dir($category);
+	} else {
+		
 	}
 
-	open my $cached, ">", $sourceCache or die "Can't open $sourceCache: $!";
-	print $cached $content;
-	close $cached or die "can't close '$cached': $!";
-
 	print $content;
+
+	$content = "<!-- " . time . " -->\n" . $content;
+
+	if ($cache) {
+		open my $cached, ">", $sourceCache or die "Can't open $sourceCache: $!";
+		print $cached $content;
+		close $cached or die "can't close '$cached': $!";
+	}
 }
