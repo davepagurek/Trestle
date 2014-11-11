@@ -212,4 +212,63 @@ sub dir {
 	return $source;
 }
 
+sub error {
+	my ($self, $error, $root) = @_;
+
+	my $source = "";
+
+	$source .= "<html>
+	<head>
+	<title>
+		Page Not Found
+		</title>
+		<link href='http://fonts.googleapis.com/css?family=Bitter:400' rel='stylesheet' type='text/css'>
+		<link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,300' rel='stylesheet' type='text/css'>
+		<link href='" . $root . "/themes/Pahgawks/Pahgawks.css' rel='stylesheet' type='text/css'>
+		</head>
+		<body>
+		<div id='title'><h1><a href='http://www.pahgawks.com'>Dave Pagurek</a></h1></div>
+		<div class='section' id='menu'>
+		  <a id='menuLabel' onclick=\"(document.getElementById('menu').className=='section')?document.getElementById('menu').className='section open':document.getElementById('menu').className='section';\">Menu</a>
+		  <div class='wrapper'>
+		    <a href='http://www.pahgawks.com' class='title'>Dave Pagurek</a>
+		      <div id='links'>
+		      <a href='http://www.pahgawks.com'>About</a>
+		      <a href='http://www.pahgawks.com/blog'>Blog</a>
+		      <a href='http://www.pahgawks.com/archives' class='selected'>Portfolio</a>
+		    </div>
+		  </div>
+		</div>
+		
+		<div class='section'>
+			<div class='wrapper'>
+				<h1>Page Not Found</h1>
+				<img class='aligncenter' src='http://www.davepagurek.com/wp-content/uploads/2012/02/404.jpg' />
+				<p>Sadly, the page you were looking for is not actually here. If you think a link on the site is broken or something, <a href='mailto:dave\@davepagurek.com'>send me an email</a> and I'll try to fix it. Otherwise, you can probably find what you were looking for somewhere in one of these categories:</p>
+
+				<a href='http://www.davepagurek.com/film' class='cat'>Animation</a>
+				<a href='http://www.davepagurek.com/games' class='cat'>Games</a>
+				<a href='http://www.davepagurek.com/category/art' class='cat'>Visual Art</a>
+				<a href='http://www.davepagurek.com/music' class='cat'>Music</a>
+				<a href='http://www.davepagurek.com/webapps' class='cat'>Web and App Programming</a>
+				<a href='http://www.davepagurek.com/blog' class='cat'>Blog</a>
+				<a href='http://www.davepagurek.com/archives' class='cat'><strong>Everything</strong></a>
+				</div>
+			</div>
+
+		</div>
+		<div class='section' id='footer'>
+		  <div class='wrapper'>
+		    <p>My name is Dave and I'm an animator, musician, programmer, designer and artist.</p>
+		    <p>Want to get in touch? Find/contact me elsewhere:</p>
+		    <p><a href='mailto:dave\@pahgawks.com' class='button'>dave\@pahgawks.com</a> <a href='http://davepvm.tumblr.com/' class='button external' target='_blank'>Tumblr</a> <a href='http://pahgawk.deviantart.com/' class='button external' target='_blank'>DeviantART</a> <a href='http://pahgawk.newgrounds.com/' class='button external' target='_blank'>Newgrounds</a> <a href='http://www.youtube.com/pahgawk' class='button external' target='_blank'>YouTube</a> <a href='http://www.twitter.com/davepvm' class='button external' target='_blank'>Twitter</a> <a href='http://pahgawks.bandcamp.com/' class='button external' target='_blank'>Bandcamp</a> <a href='http://soundcloud.com/davidpvm' class='button external' target='_blank'>Soundcloud</a> <a href='https://github.com/pahgawk/' class='button external' target='_blank'>GitHub</a>
+		      </p>
+		    </div>
+		</div>
+		</body>
+		</html>\n";
+
+	return $source;
+}
+
 1;

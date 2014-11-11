@@ -6,16 +6,15 @@ use strict;
 
 my %config = do 'config.pl';
 my $query = CGI->new();
-my $pageName = $query->param("page") || "programming";
+my $pageName = $query->param("page") || "test";
 my $source = "content/" . $pageName . ".html";
 my $sourceDir = "content/" . $pageName;
 my $sourceCache = "cache/" . $pageName . "_cache.html";
 
-print $query->header("text/html");
-
 #Show cached page if it exists
 my $remake = 0;
 if (-e $sourceCache) {
+	print $query->header("text/html");
 	open my $cached, "<", $sourceCache or die "Can't open $source: $!";
 	my $input = <$cached>;
 	my $created = 0;
@@ -48,6 +47,7 @@ if ($remake) {
 	my $cache = 0;
 
 	if (-e $source) {
+		print $query->header("text/html");
 		$cache = 1;
 		my $page = Page->new($source, $config{root});
 		$content .= $config{theme}->content($page);
@@ -57,12 +57,14 @@ if ($remake) {
 		}
 
 	} elsif (-d $sourceDir) {
+		print $query->header("text/html");
 		$cache = 1;
 		my $category = Category->new($sourceDir, $config{root});
 		
 		$content .= $config{theme}->dir($category);
 	} else {
-		
+		print $query->header( -status => '404 Not Found' );
+		$content .= $config{theme}->error(404, $config{root});
 	}
 
 	print $content;
