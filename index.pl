@@ -6,7 +6,7 @@ use strict;
 
 my %config = do 'config.pl';
 my $query = CGI->new();
-my $pageName = $query->param("page") || "test";
+my $pageName = $query->param("page") || "index";
 my $source = "content/" . $pageName . ".html";
 my $sourceDir = "content/" . $pageName;
 my $sourceCache = "cache/" . $pageName . "_cache.html";
@@ -14,7 +14,6 @@ my $sourceCache = "cache/" . $pageName . "_cache.html";
 #Show cached page if it exists
 my $remake = 0;
 if (-e $sourceCache) {
-	print $query->header("text/html");
 	open my $cached, "<", $sourceCache or die "Can't open $source: $!";
 	my $input = <$cached>;
 	my $created = 0;
@@ -22,6 +21,7 @@ if (-e $sourceCache) {
 		$created = $1;
 	}
 	if (time-$created <= $config{cacheLife}*60*60) {
+		print $query->header("text/html");
 		while (<$cached>) {
 			print $_;
 		}
@@ -46,7 +46,13 @@ if ($remake) {
 	my $content = "";
 	my $cache = 0;
 
-	if (-e $source) {
+	if ($pageName eq "index") {
+		print $query->header("text/html");
+		$cache = 1;
+		my $page = Page->new($source, $config{root});
+		$content .= $config{theme}->main($page);
+
+	} elsif (-e $source) {
 		print $query->header("text/html");
 		$cache = 1;
 		my $page = Page->new($source, $config{root});
