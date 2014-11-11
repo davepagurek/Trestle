@@ -22,7 +22,7 @@ sub content {
 	if ($content =~ /<(pre|code).*>/) {
 
 		#format code properly
-		$content =~ s/<(?:pre|code)(?: lang="(.*)")*.*>/<pre><code class="$1">/gi;
+		$content =~ s/<(?:pre|code)(?: lang="(.*)")*.*?>/<pre><code class="$1">/gi;
 		$content =~ s/<\/(pre|code)>/<\/code><\/pre>/gi;
 
 		my $theme = $self->{theme};

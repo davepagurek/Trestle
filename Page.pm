@@ -33,7 +33,7 @@ sub new {
 
 			#print $line . " END\n";
 
-			if ($line =~ /<!--/) {
+			if ($line =~ /<!--$/) {
 				$meta = 1;
 				next;
 			}
@@ -67,7 +67,9 @@ sub new {
 			} else {
 
 				#If it's in a code tag, don't format innards
-				if ($line =~ /(.*<(?:code|pre).*>)(.*)/) {
+				if ($line =~ /(.*<(?:code|pre).*?>)(.*)(<\/(?:code|pre).*)/) {
+					$content .= $1 . $cgi->escapeHTML($2) . $3 . "\n";
+				} elsif ($line =~ /(.*<(?:code|pre).*?>)(.*)/) {
 					$isCode = 1;
 					$content .= $1;
 					if ($2) {
