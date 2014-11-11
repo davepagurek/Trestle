@@ -83,8 +83,8 @@ sub new {
 						$content .= $cgi->escapeHTML($line) . "\n";
 					}
 
-				#If it's in a heading or p tag, don't wrap in a p tag
-				} elsif ($line =~ /(?:^<(?:h(?:[0-9]+)|ul|li|table|th|tr|td|p).*>)|(?:<\/(?:h(?:[0-9]+)|ul|li|table|th|tr|td|p)>$)/i) {
+				#If paragraphing is off or it's in a heading or p tag, don't wrap in a p tag
+				} elsif (($self->{paragraph} && $self->{paragraph} eq "false") || $line =~ /(?:^<(?:h(?:[0-9]+)|ul|li|table|th|tr|td|p).*>)|(?:<\/(?:h(?:[0-9]+)|ul|li|table|th|tr|td|p)>$)/i) {
 					$content .= $line . "\n";
 				} else {
 					$content .= "<p>" . $line . "</p>\n";
