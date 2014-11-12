@@ -1,3 +1,3 @@
 RewriteEngine on
- 
-RewriteRule ^([\w\-\/]+)/?$ index.pl?page=$1
+
+RewriteRule ^([\w\-\/]+)\/?$ index.pl?page=$1

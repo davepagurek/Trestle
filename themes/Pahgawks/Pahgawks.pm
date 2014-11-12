@@ -13,18 +13,34 @@ sub new {
 	return $self;
 }
 
-sub content {
-	my ($self, $page) = @_;
-	my $source = "";
+sub footer {
+	my $self = shift;
 
-	$source .= "<html>
+	my $source = "<div class='section' id='footer'>
+		  <div class='wrapper'>
+		    <p>My name is Dave and I'm an animator, musician, programmer, designer and artist.</p>
+		    <p>Want to get in touch? Find/contact me elsewhere:</p>
+		    <p><a href='mailto:dave\@pahgawks.com' class='button'>dave\@pahgawks.com</a> <a href='http://davepvm.tumblr.com/' class='button external' target='_blank'>Tumblr</a> <a href='http://pahgawk.deviantart.com/' class='button external' target='_blank'>DeviantART</a> <a href='http://pahgawk.newgrounds.com/' class='button external' target='_blank'>Newgrounds</a> <a href='http://www.youtube.com/pahgawk' class='button external' target='_blank'>YouTube</a> <a href='http://www.twitter.com/davepvm' class='button external' target='_blank'>Twitter</a> <a href='http://pahgawks.bandcamp.com/' class='button external' target='_blank'>Bandcamp</a> <a href='http://soundcloud.com/davidpvm' class='button external' target='_blank'>Soundcloud</a> <a href='https://github.com/pahgawk/' class='button external' target='_blank'>GitHub</a>
+		      </p>
+		    </div>
+		</div>
+		</body>
+		</html>\n";
+
+	return $source;
+}
+
+sub header {
+	my ($self, $category, $title, $root) = @_;
+
+	my $source = "<html>
 	<head>
 	<title>" .
-		$page->meta("title") . 
+		$title . 
 		"</title>
 		<link href='http://fonts.googleapis.com/css?family=Bitter:400' rel='stylesheet' type='text/css'>
 		<link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,300' rel='stylesheet' type='text/css'>
-		<link href='" . $page->meta("root") . "/themes/Pahgawks/Pahgawks.css' rel='stylesheet' type='text/css'>
+		<link href='" . $root . "/themes/Pahgawks/Pahgawks.css' rel='stylesheet' type='text/css'>
 		</head>
 		<body>
 		<div id='title'><h1><a href='http://www.pahgawks.com'>Dave Pagurek</a></h1></div>
@@ -33,12 +49,21 @@ sub content {
 		  <div class='wrapper'>
 		    <a href='http://www.pahgawks.com' class='title'>Dave Pagurek</a>
 		      <div id='links'>
-		      <a href='http://www.pahgawks.com'>About</a>
-		      <a href='http://www.pahgawks.com/blog'>Blog</a>
-		      <a href='http://www.pahgawks.com/archives' class='selected'>Portfolio</a>
+		      <a href='" . $root . "'" . ($category eq "about" ? " class='selected'" : "") . ">About</a>
+		      <a href='" . $root . "/blog'" . ($category eq "blog" ? " class='selected'" : "") . ">Blog</a>
+		      <a href='" . $root . "/archives'" . (!($category eq "about" || $category eq "blog") ? " class='selected'" : "") . ">Portfolio</a>
 		    </div>
 		  </div>
 		</div>";
+
+	return $source;
+}
+
+sub content {
+	my ($self, $page) = @_;
+	my $source = "";
+
+	$source .= $self->header($page->meta("category"), $page->meta("title"), page->meta("root"));
 	if ($page->meta("youtube")) {
 		$source .= "<div class='section' id='video'>
 				<div class='wrapper'>
@@ -97,17 +122,8 @@ sub content {
 
 	$source .= $page->content;
 	$source .= "</div>
-		</div>
-		<div class='section' id='footer'>
-		  <div class='wrapper'>
-		    <p>My name is Dave and I'm an animator, musician, programmer, designer and artist.</p>
-		    <p>Want to get in touch? Find/contact me elsewhere:</p>
-		    <p><a href='mailto:dave\@pahgawks.com' class='button'>dave\@pahgawks.com</a> <a href='http://davepvm.tumblr.com/' class='button external' target='_blank'>Tumblr</a> <a href='http://pahgawk.deviantart.com/' class='button external' target='_blank'>DeviantART</a> <a href='http://pahgawk.newgrounds.com/' class='button external' target='_blank'>Newgrounds</a> <a href='http://www.youtube.com/pahgawk' class='button external' target='_blank'>YouTube</a> <a href='http://www.twitter.com/davepvm' class='button external' target='_blank'>Twitter</a> <a href='http://pahgawks.bandcamp.com/' class='button external' target='_blank'>Bandcamp</a> <a href='http://soundcloud.com/davidpvm' class='button external' target='_blank'>Soundcloud</a> <a href='https://github.com/pahgawk/' class='button external' target='_blank'>GitHub</a>
-		      </p>
-		    </div>
-		</div>
-		</body>
-		</html>\n";
+		</div>";
+	$source .= self->footer();
 	return $source;
 }
 
@@ -115,29 +131,8 @@ sub dir {
 	my ($self, $category) = @_;
 	my $source = "";
 
-	$source .= "<html>
-	<head>
-	<title>" .
-		$category->info("name") . 
-		"</title>
-		<link href='http://fonts.googleapis.com/css?family=Bitter:400' rel='stylesheet' type='text/css'>
-		<link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,300' rel='stylesheet' type='text/css'>
-		<link href='" . $category->info("root") . "/themes/Pahgawks/Pahgawks.css' rel='stylesheet' type='text/css'>
-		</head>
-		<body>
-		<div id='title'><h1><a href='http://www.pahgawks.com'>Dave Pagurek</a></h1></div>
-		<div class='section' id='menu'>
-		  <a id='menuLabel' onclick=\"(document.getElementById('menu').className=='section')?document.getElementById('menu').className='section open':document.getElementById('menu').className='section';\">Menu</a>
-		  <div class='wrapper'>
-		    <a href='http://www.pahgawks.com' class='title'>Dave Pagurek</a>
-		      <div id='links'>
-		      <a href='http://www.pahgawks.com'>About</a>
-		      <a href='http://www.pahgawks.com/blog'>Blog</a>
-		      <a href='http://www.pahgawks.com/archives' class='selected'>Portfolio</a>
-		    </div>
-		  </div>
-		</div>
-		<div class='section top' id='content'>
+	$source .= $self->header($category->info("name"), $category->info("name"), $category->info("root"));
+	$source .= "<div class='section top' id='content'>
 		<div class='wrapper'>
 		<h1 class='cat'>" . $category->info("name") . "</h1>
 		<p>
@@ -195,18 +190,7 @@ sub dir {
 			</div>";
 	}
 
-	$source .= "</div>
-		</div>
-		<div class='section' id='footer'>
-		  <div class='wrapper'>
-		    <p>My name is Dave and I'm an animator, musician, programmer, designer and artist.</p>
-		    <p>Want to get in touch? Find/contact me elsewhere:</p>
-		    <p><a href='mailto:dave\@pahgawks.com' class='button'>dave\@pahgawks.com</a> <a href='http://davepvm.tumblr.com/' class='button external' target='_blank'>Tumblr</a> <a href='http://pahgawk.deviantart.com/' class='button external' target='_blank'>DeviantART</a> <a href='http://pahgawk.newgrounds.com/' class='button external' target='_blank'>Newgrounds</a> <a href='http://www.youtube.com/pahgawk' class='button external' target='_blank'>YouTube</a> <a href='http://www.twitter.com/davepvm' class='button external' target='_blank'>Twitter</a> <a href='http://pahgawks.bandcamp.com/' class='button external' target='_blank'>Bandcamp</a> <a href='http://soundcloud.com/davidpvm' class='button external' target='_blank'>Soundcloud</a> <a href='https://github.com/pahgawk/' class='button external' target='_blank'>GitHub</a>
-		      </p>
-		    </div>
-		</div>
-		</body>
-		</html>\n";
+	$source .= $self->footer();
 
 
 	return $source;
@@ -217,30 +201,9 @@ sub error {
 
 	my $source = "";
 
-	$source .= "<html>
-	<head>
-	<title>
-		Page Not Found
-		</title>
-		<link href='http://fonts.googleapis.com/css?family=Bitter:400' rel='stylesheet' type='text/css'>
-		<link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,300' rel='stylesheet' type='text/css'>
-		<link href='" . $root . "/themes/Pahgawks/Pahgawks.css' rel='stylesheet' type='text/css'>
-		</head>
-		<body>
-		<div id='title'><h1><a href='http://www.pahgawks.com'>Dave Pagurek</a></h1></div>
-		<div class='section' id='menu'>
-		  <a id='menuLabel' onclick=\"(document.getElementById('menu').className=='section')?document.getElementById('menu').className='section open':document.getElementById('menu').className='section';\">Menu</a>
-		  <div class='wrapper'>
-		    <a href='http://www.pahgawks.com' class='title'>Dave Pagurek</a>
-		      <div id='links'>
-		      <a href='http://www.pahgawks.com'>About</a>
-		      <a href='http://www.pahgawks.com/blog'>Blog</a>
-		      <a href='http://www.pahgawks.com/archives' class='selected'>Portfolio</a>
-		    </div>
-		  </div>
-		</div>
-		
-		<div class='section'>
+	$source .= self->header("", "Page Not Found", $root);
+
+	$source .= "<div class='section'>
 			<div class='wrapper'>
 				<h1>Page Not Found</h1>
 				<img class='aligncenter' src='http://www.davepagurek.com/wp-content/uploads/2012/02/404.jpg' />
@@ -256,17 +219,9 @@ sub error {
 				</div>
 			</div>
 
-		</div>
-		<div class='section' id='footer'>
-		  <div class='wrapper'>
-		    <p>My name is Dave and I'm an animator, musician, programmer, designer and artist.</p>
-		    <p>Want to get in touch? Find/contact me elsewhere:</p>
-		    <p><a href='mailto:dave\@pahgawks.com' class='button'>dave\@pahgawks.com</a> <a href='http://davepvm.tumblr.com/' class='button external' target='_blank'>Tumblr</a> <a href='http://pahgawk.deviantart.com/' class='button external' target='_blank'>DeviantART</a> <a href='http://pahgawk.newgrounds.com/' class='button external' target='_blank'>Newgrounds</a> <a href='http://www.youtube.com/pahgawk' class='button external' target='_blank'>YouTube</a> <a href='http://www.twitter.com/davepvm' class='button external' target='_blank'>Twitter</a> <a href='http://pahgawks.bandcamp.com/' class='button external' target='_blank'>Bandcamp</a> <a href='http://soundcloud.com/davidpvm' class='button external' target='_blank'>Soundcloud</a> <a href='https://github.com/pahgawk/' class='button external' target='_blank'>GitHub</a>
-		      </p>
-		    </div>
-		</div>
-		</body>
-		</html>\n";
+		</div>";
+
+	$source .= self->footer();
 
 	return $source;
 }
@@ -275,31 +230,10 @@ sub main {
 	my ($self, $page) = @_;
 	my $source = "";
 
-	$source .= "<html>
-	<head>
-	<title>" .
-		$page->meta("title") . 
-		"</title>
-		<link href='http://fonts.googleapis.com/css?family=Bitter:400' rel='stylesheet' type='text/css'>
-		<link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,300' rel='stylesheet' type='text/css'>
-		<link href='" . $page->meta("root") . "/themes/Pahgawks/Pahgawks.css' rel='stylesheet' type='text/css'>
-		</head>
-		<body>
-		<div id='title'><h1><a href='http://www.pahgawks.com'>Dave Pagurek</a></h1></div>
-		<div class='section' id='menu'>
-		  <a id='menuLabel' onclick=\"(document.getElementById('menu').className=='section')?document.getElementById('menu').className='section open':document.getElementById('menu').className='section';\">Menu</a>
-		  <div class='wrapper'>
-		    <a href='http://www.pahgawks.com' class='title'>Dave Pagurek</a>
-		      <div id='links'>
-		      <a href='http://www.pahgawks.com'>About</a>
-		      <a href='http://www.pahgawks.com/blog'>Blog</a>
-		      <a href='http://www.pahgawks.com/archives' class='selected'>Portfolio</a>
-		    </div>
-		  </div>
-		</div>";
+	$source .= $self->header("about", $page->meta("title"), $page->meta("root"));
 
 	$source .= $page->content;
-	
+
 	$source .= "<div class='section' id='footer'>
 		  <div class='wrapper'>
 		    <p>My name is Dave and I'm an animator, musician, programmer, designer and artist.</p>
