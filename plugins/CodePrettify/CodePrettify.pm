@@ -7,6 +7,8 @@ sub new {
 	my $class = shift;
 	my $self = {};
 
+	$self->{pages} = 1;
+
 
 	#theme file names can be found at https://github.com/isagalaev/highlight.js/tree/master/src/styles
 	#preview of themes can be found at http://highlightjs.org/static/test.html

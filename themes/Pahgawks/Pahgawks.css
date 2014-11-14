@@ -68,6 +68,13 @@ a.button.small {
 a.button.small:hover {
   background-color:#95a5a6;
 }
+.centered {
+  margin:40px auto;
+  text-align:center;
+}
+.centered.large {
+  font-size:1.5em;
+}
 a.button.white {
   background-color:#FFF;
   color:#333;

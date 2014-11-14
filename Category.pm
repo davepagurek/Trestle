@@ -9,6 +9,9 @@ sub new {
 	my $class = shift;
 	my $self = { };
 	my $sourceDir = shift;
+	if ($sourceDir =~ /^content\/(.+)$/) {
+		$self->{dir} = $1;
+	}
 	$self->{root} = shift;
 
 	my $json = JSON->new->allow_nonref;
@@ -21,12 +24,14 @@ sub new {
 
 	my $contents = do {
 		local $/;
-		open my $fh, $sourceDir . "/category.json" or die "Can't open category.json: $!";
+		open my $fh, $sourceDir . "/category.json" or die "Can't open category.json from $sourceDir: $!";
 		<$fh>;
 	};
 	my $categoryJSON = $json->decode($contents);
 
-	$self->{name} = $categoryJSON->{name};
+	foreach my $key (keys %$categoryJSON) {
+		$self->{$key} = $categoryJSON->{$key};
+	}
 
 	bless $self, $class;
 	return $self;

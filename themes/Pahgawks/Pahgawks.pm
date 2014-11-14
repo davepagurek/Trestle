@@ -33,6 +33,8 @@ sub footer {
 sub header {
 	my ($self, $category, $title, $root) = @_;
 
+	$category = lc($category);
+
 	my $source = "<html>
 	<head>
 	<title>" .
@@ -40,6 +42,8 @@ sub header {
 		"</title>
 		<link href='http://fonts.googleapis.com/css?family=Bitter:400' rel='stylesheet' type='text/css'>
 		<link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,300' rel='stylesheet' type='text/css'>
+		<meta name='theme-color' content='#e74c3c' />
+		<meta name='viewport' content='width=device-width' />
 		<link href='" . $root . "/themes/Pahgawks/Pahgawks.css' rel='stylesheet' type='text/css'>
 		</head>
 		<body>
@@ -63,7 +67,7 @@ sub content {
 	my ($self, $page) = @_;
 	my $source = "";
 
-	$source .= $self->header($page->meta("category"), $page->meta("title"), page->meta("root"));
+	$source .= $self->header($page->meta("category"), $page->meta("title"), $page->meta("root"));
 	if ($page->meta("youtube")) {
 		$source .= "<div class='section' id='video'>
 				<div class='wrapper'>
@@ -123,7 +127,7 @@ sub content {
 	$source .= $page->content;
 	$source .= "</div>
 		</div>";
-	$source .= self->footer();
+	$source .= $self->footer();
 	return $source;
 }
 
@@ -196,12 +200,94 @@ sub dir {
 	return $source;
 }
 
+sub archives {
+	my ($self, $root, @cats) = @_;
+	my $source = "";
+
+	my @categories = sort { $a->info("rank") <=> $b->info("rank") } @cats;
+
+	$source .= $self->header("archives", "Archives", $root);
+	$source .= "<div class='section top' id='content'>
+		<div class='wrapper'>
+		<h1 class='cat'>Everything</h1>
+		<p>
+		<a href='" . $root . "/film' class='cat'>Animation</a>
+		<a href='" . $root . "/programming' class='cat'>Programming</a>
+		<a href='" . $root . "/art' class='cat'>Art</a>
+		<a href='" . $root . "/music' class='cat'>Music</a>
+		<a href='" . $root . "/blog' class='cat'>Blog</a>
+		<a href='" . $root . "/archives' class='cat'>Everything</a>
+		</p>
+		</div>
+		</div>";
+
+	my $section = 1;
+	foreach my $category (@categories) {
+		$source .= "<div class='section archive" . ($section%2==0?"":" odd") . "' id='content'>
+			<div class='wrapper icons'>
+			<h2>" . $category->info("name") . "</h2>";
+
+		my $pageNum = 0;
+		foreach my $page (@{ $category->info("pages") }) {
+
+			$source .= "<div class='animation'><div class='icon' style='background-image:url(" . $page->meta("thumbnail") . ")'><a href=" . $page->meta("url") . "></a></div><div class='info'><a class='title' href='" . $page->meta("url") . "''>" . $page->meta("title") . "</a>";
+
+			if ($page->meta("awards")) {
+				$source .= "<div class='awards'>\n";
+				foreach my $award (@{ $page->meta("awards") }) {
+					$source .= "<div class='" . $award->{award} . "' title='" . $award->{description} . "''></div>";
+				}
+				$source .= "</div>\n";
+			}
+
+			if ($page->meta("languages")) {
+				$source .= "<div class='languages'>Made with ";
+				my $j = 0;
+				foreach my $language (@{ $page->meta("languages") }) {
+					$source .= $language;
+					if (scalar @{ $page->meta("languages") } == 2 && $j == 0) {
+						$source .= " and ";
+					} elsif ($j == scalar @{ $page->meta("languages") }-2) {
+						$source .= ", and ";
+					} elsif ($j<scalar @{ $page->meta("languages") }-1) {
+						$source .= ", ";
+					}
+					$j++;
+				}
+				$source .= "</div>";
+			}
+
+			$source .= "<p>" . $page->meta("excerpt") . "</p>";
+			$source .= "<div class='date'>" . $page->meta("date")->mday . " " . $page->meta("date")->fullmonth . ", " . $page->meta("date")->year . "</div>
+				</div>
+				</div>";
+
+			$pageNum++;
+			if ($pageNum >= 4) {
+				last;
+			}
+		}
+		$source .= "<div class='centered large'>
+				<a href='" . $category->info("dir") . "' class='button'>View " . $category->info("name") . "</a>
+			</div>
+			</div></div>\n";
+		
+		$section++;
+	}
+	
+
+	$source .= $self->footer();
+
+
+	return $source;
+}
+
 sub error {
 	my ($self, $error, $root) = @_;
 
 	my $source = "";
 
-	$source .= self->header("", "Page Not Found", $root);
+	$source .= $self->header("", "Page Not Found", $root);
 
 	$source .= "<div class='section'>
 			<div class='wrapper'>
@@ -221,7 +307,7 @@ sub error {
 
 		</div>";
 
-	$source .= self->footer();
+	$source .= $self->footer();
 
 	return $source;
 }

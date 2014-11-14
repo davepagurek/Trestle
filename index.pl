@@ -52,6 +52,29 @@ if ($remake) {
 		my $page = Page->new($source, $config{root});
 		$content .= $config{theme}->main($page);
 
+		for (my $i=0; $i<scalar @{$config{plugins}}; $i++) {
+			if ($config{plugins}[$i]->{index}) {
+				$content = $config{plugins}[$i]->content($content, $page);
+			}
+		}
+
+	} elsif ($pageName eq "archives") {
+		print $query->header("text/html");
+		$cache = 1;
+		my @categories = ();
+		opendir(my $dh, "content") || die "can't opendir content: $!";
+		my @dirs = grep {-d "content/$_" && ! /^\./} readdir($dh);
+		for my $dir (@dirs) {
+		    push(@categories, Category->new("content/" . $dir, $config{root}));
+		}
+		$content .= $config{theme}->archives($config{root}, @categories);
+
+		for (my $i=0; $i<scalar @{$config{plugins}}; $i++) {
+			if ($config{plugins}[$i]->{archives}) {
+				$content = $config{plugins}[$i]->content($content, @categories);
+			}
+		}
+
 	} elsif (-e $source) {
 		print $query->header("text/html");
 		$cache = 1;
@@ -59,7 +82,9 @@ if ($remake) {
 		$content .= $config{theme}->content($page);
 
 		for (my $i=0; $i<scalar @{$config{plugins}}; $i++) {
-			$content = $config{plugins}[$i]->content($content, $page);
+			if ($config{plugins}[$i]->{pages}) {
+				$content = $config{plugins}[$i]->content($content, $page);
+			}
 		}
 
 	} elsif (-d $sourceDir) {
@@ -68,9 +93,22 @@ if ($remake) {
 		my $category = Category->new($sourceDir, $config{root});
 		
 		$content .= $config{theme}->dir($category);
+
+		for (my $i=0; $i<scalar @{$config{plugins}}; $i++) {
+			if ($config{plugins}[$i]->{categories}) {
+				$content = $config{plugins}[$i]->content($content, $category);
+			}
+		}
+
 	} else {
 		print $query->header( -status => '404 Not Found' );
 		$content .= $config{theme}->error(404, $config{root});
+
+		for (my $i=0; $i<scalar @{$config{plugins}}; $i++) {
+			if ($config{plugins}[$i]->{error}) {
+				$content = $config{plugins}[$i]->content($content, 404);
+			}
+		}
 	}
 
 	print $content;
