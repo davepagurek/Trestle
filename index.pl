@@ -3,6 +3,7 @@ use CGI;
 use Page;
 use Category;
 use strict;
+use warnings;
 
 my %config = do 'config.pl';
 my $query = CGI->new();

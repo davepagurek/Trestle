@@ -2,8 +2,34 @@ package Page;
 
 use CGI;
 use JSON;
-use Time::Piece;
 use strict;
+
+sub timeFormat {
+	my ($timeStr) = @_;
+	my $time = {};
+	my $months = {
+		1 => "January",
+		2 => "February",
+		3 => "March",
+		4 => "April",
+		5 => "May",
+		6 => "June",
+		7 => "July",
+		8 => "August",
+		9 => "September",
+		10 => "October",
+		11 => "November",
+		12 => "December"
+	};
+	if ($timeStr =~ /([0-9]+)-([0-9]+)-([0-9]+)/) {
+		$time->{full} = 0 + $1*10000 + $2*100 + $3;
+		$time->{year} = 0 + $1;
+		$time->{month} = $2;
+		$time->{fullmonth} = $months->{ 0 + $2};
+		$time->{mday} = $3;
+	}
+	return $time;
+}
 
 sub new {
 	my $class = shift;
@@ -26,7 +52,7 @@ sub new {
 		while (<$page>) {
 			chomp;
 			my $line = $_;
-			$line =~ s/\R//g;
+			$line =~ s/\n//g;
 			if (!$isCode) {
 				$line =~ s/^\s+|\s+$//g;
 			}
@@ -53,7 +79,7 @@ sub new {
 					}
 					if ($self->{date}) {
 						use Data::Dumper;
-						$self->{date} = Time::Piece->strptime($self->{date}, "%Y-%m-%d");
+						$self->{date} = timeFormat($self->{date});
 					}
 
 					if ($onlyMeta) {
