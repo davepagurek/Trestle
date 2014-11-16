@@ -75,7 +75,7 @@ sub content {
 				</div>
 			</div>\n";
 	}
-	if ($page->meta("browser") || $page->meta("embed") || $page->meta("buttons") || $page->meta("art")) {
+	if ($page->meta("browser") || $page->meta("embed") || $page->meta("video") || $page->meta("buttons") || $page->meta("art")) {
 		$source .= "<div class='section odd'>
 			<div class='wrapper centered'>";
 		
@@ -96,6 +96,9 @@ sub content {
 		if ($page->meta("embed")) {
 			$source .= $page->meta("embed");
 		}
+		if ($page->meta("video")) {
+			$source .= $page->meta("video");
+		}
 		if ($page->meta("buttons")) {
 			$source .= "<p>";
 			foreach my $button (@{ $page->meta("buttons") }) {
@@ -111,7 +114,7 @@ sub content {
 	  <div class='wrapper'>\n";
 
 	$source .= "<h1>" . $page->meta("title") . "</h1>\n";
-	$source .= "<div id='date'>" . $page->meta("date")->mday . " " . $page->meta("date")->fullmonth . ", " . $page->meta("date")->year . "</div>\n";
+	$source .= "<div id='date'>" . $page->meta("date")->{mday} . " " . $page->meta("date")->{fullmonth} . ", " . $page->meta("date")->{year} . "</div>\n";
 
 	if ($page->meta("awards")) {
 		$source .= "<div class='awards_full'>\n<table>\n";
@@ -151,14 +154,14 @@ sub dir {
 	my $oldYear = 0;
 	my $yearNum = 0;
 	foreach my $page (@{ $category->info("pages") }) {
-		if ($oldYear != $page->meta("date")->year) {
-			$oldYear = $page->meta("date")->year;
+		if ($oldYear != $page->meta("date")->{year}) {
+			$oldYear = $page->meta("date")->{year};
 			$yearNum++;
 			$source .= "</div>
 				</div>
 				<div class='section archive" . ($yearNum%2==0?"":" odd") . "' id='content'>
 				<div class='wrapper icons'>
-				<h2>" . $page->meta("date")->year . "</h2>";
+				<h2>" . $page->meta("date")->{year} . "</h2>";
 		}
 
 		$source .= "<div class='animation'><div class='icon' style='background-image:url(" . $page->meta("thumbnail") . ")'><a href=" . $page->meta("url") . "></a></div><div class='info'><a class='title' href='" . $page->meta("url") . "''>" . $page->meta("title") . "</a>";
@@ -189,11 +192,13 @@ sub dir {
 		}
 
 		$source .= "<p>" . $page->meta("excerpt") . "</p>";
-		$source .= "<div class='date'>" . $page->meta("date")->mday . " " . $page->meta("date")->fullmonth . ", " . $page->meta("date")->year . "</div>
+		$source .= "<div class='date'>" . $page->meta("date")->{mday} . " " . $page->meta("date")->{fullmonth} . ", " . $page->meta("date")->{year} . "</div>
 			</div>
 			</div>";
 	}
 
+	$source .= "</div>
+				</div>";
 	$source .= $self->footer();
 
 
@@ -258,7 +263,7 @@ sub archives {
 			}
 
 			$source .= "<p>" . $page->meta("excerpt") . "</p>";
-			$source .= "<div class='date'>" . $page->meta("date")->mday . " " . $page->meta("date")->fullmonth . ", " . $page->meta("date")->year . "</div>
+			$source .= "<div class='date'>" . $page->meta("date")->{mday} . " " . $page->meta("date")->{fullmonth} . ", " . $page->meta("date")->{year} . "</div>
 				</div>
 				</div>";
 

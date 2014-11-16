@@ -20,7 +20,7 @@ sub new {
 	foreach my $pageFile (glob("$sourceDir/*.html")) {
 		push(@pages, Page->new($pageFile, $self->{root}, 1));
 	}
-	@{ $self->{pages} } = sort { $b->meta("date") <=> $a->meta("date") } @pages;
+	@{ $self->{pages} } = sort { $b->meta("date")->{full} <=> $a->meta("date")->{full} } @pages;
 
 	my $contents = do {
 		local $/;
