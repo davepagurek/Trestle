@@ -35,11 +35,12 @@ sub new {
 	my $class = shift;
 	my $self = { };
 	my $source = shift;
+	my $root = shift;
 	my $url = $source;
-	$url =~ s/^content\/(.*).html$/$1/;
+	$url =~ s/^content\/(.*).html$/$root\/$1/;
 	$self->{source} = $source;
 	$self->{url} = $url;
-	$self->{root} = shift;
+	$self->{root} = $root;
 	my $onlyMeta = shift;
 	my $cgi = CGI->new();
 	my $json = JSON->new->allow_nonref;

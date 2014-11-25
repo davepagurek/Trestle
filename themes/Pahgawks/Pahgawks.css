@@ -393,6 +393,7 @@ img.art {
   background-position:center;
   color:#FFF;
   padding-bottom:20px;
+  overflow:hidden;
 }
 #header h1, #header h2, #header p {
   text-align:center;
