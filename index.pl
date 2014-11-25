@@ -1,13 +1,13 @@
-#!C:/xampp/perl/bin/perl.exe
+#!C:\Perl\bin\wperl.exe
 use CGI;
 use Page;
 use Category;
 use strict;
-use warnings;
 
 my %config = do 'config.pl';
 my $query = CGI->new();
 my $pageName = $query->param("page") || "index";
+$pageName =~ s/\/+$//;
 my $source = "content/" . $pageName . ".html";
 my $sourceDir = "content/" . $pageName;
 my $sourceCache = "cache/" . $pageName . "_cache.html";

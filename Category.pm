@@ -9,7 +9,7 @@ sub new {
 	my $class = shift;
 	my $self = { };
 	my $sourceDir = shift;
-	if ($sourceDir =~ /^content\/(.+)$/) {
+	if ($sourceDir =~ /^content\/+(.+)$/) {
 		$self->{dir} = $1;
 	}
 	$self->{root} = shift;
@@ -18,6 +18,7 @@ sub new {
 	
 	my @pages = ();
 	foreach my $pageFile (glob("$sourceDir/*.html")) {
+		$pageFile =~ s/\/+/\//g;
 		push(@pages, Page->new($pageFile, $self->{root}, 1));
 	}
 	@{ $self->{pages} } = sort { $b->meta("date")->{full} <=> $a->meta("date")->{full} } @pages;

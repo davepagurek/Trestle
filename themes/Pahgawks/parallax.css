@@ -1,0 +1,45 @@
+html {
+  height: 100%;
+  overflow: hidden;
+}
+body {
+  margin:0;
+  padding:0;
+  perspective: 1px;
+  -webkit-perspective: 1px;
+  transform-style: preserve-3d;
+  -webkit-transform-style: preserve-3d;
+  height: 100%;
+  overflow-y: scroll;
+  overflow-x: hidden;
+}
+
+.parallax {
+  transform-style: inherit;
+  -webkit-transform-style: inherit;
+}
+.parallax-layer, .parallax:before {
+  transform-style: inherit;
+  -webkit-transform-style: inherit;
+}
+.parallax-layer.parallax-base {
+  transform: translateZ(0);
+  -webkit-transform: translateZ(0);
+}
+.parallax:before {
+  content: "";
+  transform-style: inherit;
+  -webkit-transform-style: inherit;
+  transform: translateZ(-1px) scale(2); /* 1 + (translateZ * -1) / perspective */
+  -webkit-transform: translateZ(-1px) scale(2);
+  background-color:#c0392b;
+  background-image: url(http://www.davepagurek.com/wp-content/uploads/2014/08/cliffs-blurred.jpg);
+  background-size:cover;
+  background-position:center;
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index:-1;
+}
