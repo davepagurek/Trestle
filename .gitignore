@@ -1,6 +1,6 @@
 content/*
-content-old/
 !content/.htaccess
+content-old/
 cache/
 scraper.pl
 
