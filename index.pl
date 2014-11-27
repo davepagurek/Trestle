@@ -1,4 +1,4 @@
-#!C:\Perl\bin\wperl.exe
+#!/usr/bin/perl
 use CGI;
 use Page;
 use Category;
@@ -39,10 +39,7 @@ if ($remake) {
 	#make cache subdirectory if it doesn't exist
 	my $dir = "";
 	$dir = $1 if $pageName =~ /^(.*)\/[\w-]/;
-	my $cacheDir = "cache/" . $dir;
-	if (!-d $cacheDir) {
-		mkdir $cacheDir or die "Unable to create $cacheDir";
-	}
+
 
 	my $content = "";
 	my $cache = 0;
@@ -66,7 +63,9 @@ if ($remake) {
 		opendir(my $dh, "content") || die "can't opendir content: $!";
 		my @dirs = grep {-d "content/$_" && ! /^\./} readdir($dh);
 		for my $dir (@dirs) {
-		    push(@categories, Category->new("content/" . $dir, $config{root}));
+            if ($dir ne "images") {
+                push(@categories, Category->new("content/" . $dir, $config{root}));
+            }
 		}
 		$content .= $config{theme}->archives($config{root}, @categories);
 
@@ -92,7 +91,7 @@ if ($remake) {
 		print $query->header("text/html");
 		$cache = 1;
 		my $category = Category->new($sourceDir, $config{root});
-		
+
 		$content .= $config{theme}->dir($category);
 
 		for (my $i=0; $i<scalar @{$config{plugins}}; $i++) {
@@ -117,6 +116,10 @@ if ($remake) {
 	$content = "<!-- " . time . " -->\n" . $content;
 
 	if ($cache) {
+        my $cacheDir = "cache/" . $dir;
+        if (!-d $cacheDir) {
+            mkdir $cacheDir or die "Unable to create $cacheDir";
+        }
 		open my $cached, ">", $sourceCache or die "Can't open $sourceCache: $!";
 		print $cached $content;
 		close $cached or die "can't close '$cached': $!";
