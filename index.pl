@@ -87,7 +87,7 @@ if ($remake) {
 			}
 		}
 
-	} elsif (-d $sourceDir) {
+	} elsif ($pageName ne "images" && -d $sourceDir) {
 		print $query->header("text/html");
 		$cache = 1;
 		my $category = Category->new($sourceDir, $config{root});
