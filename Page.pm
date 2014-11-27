@@ -60,7 +60,7 @@ sub new {
 
 			#print $line . " END\n";
 
-			if ($line =~ /<!--$/) {
+			if (!$isCode && $line =~ /<!--$/) {
 				$meta = 1;
 				next;
 			}
@@ -79,7 +79,6 @@ sub new {
 						$self->{$key} = $metaJSON->{$key};
 					}
 					if ($self->{date}) {
-						use Data::Dumper;
 						$self->{date} = timeFormat($self->{date});
 					}
 
@@ -89,6 +88,7 @@ sub new {
 
 				#Add meta values if they exist
 				} else {
+                    $line =~ s/\%root\%/$root/g;
 					$metaSource .= $line . "\n";
 				}
 			} else {
