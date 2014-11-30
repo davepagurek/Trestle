@@ -1,0 +1,42 @@
+body {
+    background-color:#EEE;
+    padding:0;
+    margin:0;
+    font-family: 'Open Sans', sans-serif;
+}
+
+h1 {
+    font-size:40px;
+    margin:40px;
+    madding:0;
+    text-align:center;
+}
+
+form#login {
+    width: 400px;
+    margin: 20px auto;
+    padding:20px;
+    background-color:#FFF;
+    box-shadow: 0 0 10px #999;
+    text-align:center;
+}
+
+form#login input[type="text"], form#login input[type="password"] {
+    display:inline-block;
+    width:200px;
+    border:0;
+    border-bottom: 2px solid #DDD;
+    font-size:14px;
+    outline:0;
+}
+
+form#login label {
+    display: inline-block;
+    width: 100px;
+    font-size:14px;
+    font-style:italic;
+}
+
+form#login .line {
+    margin-bottom:10px;
+}

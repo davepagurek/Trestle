@@ -3,6 +3,7 @@ content/*
 content-old/
 cache/
 scraper.pl
+admin/credentials.pl
 
 #################
 ## Eclipse
