@@ -38,7 +38,7 @@ sub header {
 	my $source = "<html>
 	<head>
 	<title>" .
-		$title . 
+		$title .
 		"</title>
 		<link href='http://fonts.googleapis.com/css?family=Bitter:400' rel='stylesheet' type='text/css'>
 		<link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,300' rel='stylesheet' type='text/css'>
@@ -74,11 +74,10 @@ sub content {
 					<iframe class='youtube' width='560' height='315' src='http://www.youtube.com/embed/" . $page->meta("youtube") . "?rel=0' frameborder='0' allowfullscreen></iframe>
 				</div>
 			</div>\n";
-	}
-	if ($page->meta("browser") || $page->meta("embed") || $page->meta("video") || $page->meta("buttons") || $page->meta("art")) {
+	} elsif ($page->meta("browser") || $page->meta("embed") || $page->meta("video") || $page->meta("buttons") || $page->meta("art")) {
 		$source .= "<div class='section odd'>
 			<div class='wrapper centered'>";
-		
+
 		if ($page->meta("browser")) {
 			$source .= "<div class='browser big'>
 				<div class='winbutton'></div>
@@ -276,10 +275,10 @@ sub archives {
 				<a href='" . $category->info("dir") . "' class='button'>View " . $category->info("name") . "</a>
 			</div>
 			</div></div>\n";
-		
+
 		$section++;
 	}
-	
+
 
 	$source .= $self->footer();
 
