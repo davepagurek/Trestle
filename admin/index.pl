@@ -4,6 +4,7 @@ use CGI::Session;
 use CGI;
 use CGI::Carp qw(warningsToBrowser fatalsToBrowser);
 use Digest::MD5 qw(md5);
+use File::Find;
 use strict;
 
 sub header {
@@ -23,6 +24,13 @@ sub footer {
     my $output = "</body>
     </html>";
     return $output;
+}
+
+my @files = ();
+sub wanted {
+    if ($File::Find::name =~ /content\/(.*\.html)$/) {
+        push(@files, $1);
+    }
 }
 
 my %credentials = do 'credentials.pl';
@@ -56,16 +64,34 @@ if ($loggedin) {
     #extend expiration
     $session->expire('+2h');
 
+
+    find \&wanted, "../content";
+
+
     print header("Dashboard");
     print "
     <div id='header'>
         <h1>Trestle Admin</h1>
-        <form method='post'>
+        <form method='post' id='logout'>
             <input type='hidden' name='log_out' id='log_out' value='true' />
 
             <input type='submit' value='Log Out' />
         </form>
     </div>";
+
+    print "
+    <div class='section'>
+        <h2>Edit Page</h2>
+        <ul>";
+
+    for my $file (@files) {
+        print "<li>$file</li>";
+    }
+
+    print "
+        </ul>
+    </div>";
+
     print footer();
 } else {
     #present login format
