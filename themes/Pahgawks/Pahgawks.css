@@ -594,6 +594,11 @@ img.art {
   #title {
     display:block;
     text-align:center;
+    padding:20px;
+    background-color:#EEE;
+  }
+  #title h1 {
+      margin:0;
   }
   iframe.youtube {
     height:350px;
@@ -623,6 +628,9 @@ img.art {
   }
   .half.left .padding, .half.right .padding, .padding {
     padding:5px;
+  }
+  #title {
+      background-color:#FFF;
   }
   #animation iframe {
     height: 250px;
