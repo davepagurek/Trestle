@@ -14,9 +14,22 @@ sub header {
     <head>
         <title>Admin - " . $title . "</title>
         <link rel='stylesheet' type='text/css' href='style.css' />
-        <link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,400,300,700' rel='stylesheet' type='text/css'>
+        <link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,400,300,700' rel='stylesheet' type='text/css'>";
+
+    if (lc($title) eq "editor") {
+        $output .= "<script type='text/javascript' src='editor.js'></script>";
+    }
+
+    $output .= "
     </head>
-    <body>";
+    <body>
+        <div id='header'>
+            <h1><a href='index.pl'>Trestle Admin</a></h1>
+            <form method='post' id='logout'>
+                <input type='hidden' name='log_out' id='log_out' value='true' />
+                <input type='submit' value='Log Out' />
+            </form>
+        </div>";
     return $output;
 }
 
@@ -64,35 +77,50 @@ if ($loggedin) {
     #extend expiration
     $session->expire('+2h');
 
+    if ($query->param("edit") && -e "../content/" . $query->param("edit")) {
+        print header("Editor");
 
-    find \&wanted, "../content";
+
+        print "
+        <div class='full'>
+            <form id='editor' method='post'>
+                <textarea id='content' name='content'>";
+
+        my $source = "../content/" . $query->param("edit");
+        open my $content, "<", $source or die "Can't open $source: $!";
+        while (<$content>) {
+            print $_;
+        }
+
+        print "</textarea>
+                <input type='checkbox' id='spellcheck' name='spellcheck' checked> <label for='spellcheck'>Spellcheck</label>
+
+                <input type='submit' value='save' />
+            </form>
+        </div>"
 
 
-    print header("Dashboard");
-    print "
-    <div id='header'>
-        <h1>Trestle Admin</h1>
-        <form method='post' id='logout'>
-            <input type='hidden' name='log_out' id='log_out' value='true' />
+    } else {
 
-            <input type='submit' value='Log Out' />
-        </form>
-    </div>";
+        find \&wanted, "../content";
 
-    print "
-    <div class='section'>
-        <h2>Edit Page</h2>
-        <ul>";
+        print header("Dashboard");
 
-    for my $file (@files) {
-        print "<li>$file</li>";
+        print "
+        <div class='section'>
+            <h2>Edit Page</h2>
+            <ul>";
+
+        for my $file (@files) {
+            print "<li><a href='?edit=$file'>$file</a></li>";
+        }
+
+        print "
+            </ul>
+        </div>";
+
+        print footer();
     }
-
-    print "
-        </ul>
-    </div>";
-
-    print footer();
 } else {
     #present login format
 
