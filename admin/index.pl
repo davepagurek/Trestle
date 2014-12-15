@@ -74,10 +74,21 @@ if ($query->param("log_out")) {
 print $query->header("text/html") unless $query->{".header_printed"};
 
 if ($loggedin) {
+
     #extend expiration
     $session->expire('+2h');
 
-    if ($query->param("edit") && -e "../content/" . $query->param("edit")) {
+    if ($query->url_param("edit") && -e "../content/" . $query->url_param("edit")) {
+
+        my $source = "../content/" . $query->url_param("edit");
+
+
+        if ($query->param("content")) {
+            open my $content, ">", $source or die "Can't open $source: $!";
+            print $content $query->param("content");
+            close $content;
+        }
+
         print header("Editor");
 
 
@@ -86,11 +97,12 @@ if ($loggedin) {
             <form id='editor' method='post'>
                 <textarea id='content' name='content'>";
 
-        my $source = "../content/" . $query->param("edit");
         open my $content, "<", $source or die "Can't open $source: $!";
         while (<$content>) {
             print $_;
         }
+        close $content or die "can't close '$content': $!";
+
 
         print "</textarea>
                 <input type='checkbox' id='spellcheck' name='spellcheck' checked> <label for='spellcheck'>Spellcheck</label>
