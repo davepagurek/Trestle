@@ -1,3 +1,4 @@
+#!C:/Perl/bin/perl
 #!/usr/bin/perl
 use CGI;
 use Page;
