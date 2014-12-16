@@ -48,5 +48,5 @@ window.addEventListener("load", function() {
            e.preventDefault();
            insertAtCaret("content", "\t");
         }
-    })
+    });
 });

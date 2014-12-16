@@ -113,3 +113,38 @@ textarea {
     border-bottom-left-radius: 10px;
 }
 
+ul.dirlist, ul.dirlist li ul {
+    list-style-type: none;
+    margin-left:5px;
+    padding-left:10px;
+}
+
+ul.dirlist li, ul.dirlist li ul li {
+    padding-left: 1em;
+    text-indent: -1em;
+}
+
+ul.dirlist li.dir:hover span {
+    cursor:pointer;
+}
+
+ul.dirlist li:before, ul.dirlist li ul li:before {
+    content: "\2022";
+    padding-right: 5px;
+    font-family: monospace;
+    line-height: 15px;
+}
+
+ul.dirlist li.closed:before {
+    content: "+";
+}
+
+ul.dirlist li.open:before {
+    content: "-";
+}
+
+ul.dirlist li ul {
+    overflow:hidden;
+    height:0;
+}
+
