@@ -18,6 +18,8 @@ sub header {
 
     if (lc($title) eq "editor") {
         $output .= "<script type='text/javascript' src='editor.js'></script>";
+    } elsif (lc($title) eq "dashboard") {
+        $output .= "<script type='text/javascript' src='dashboard.js'></script>";
     }
 
     $output .= "
@@ -40,9 +42,18 @@ sub footer {
 }
 
 my @files = ();
+my $dirs = {};
 sub wanted {
-    if ($File::Find::name =~ /content\/(.*\.html)$/) {
-        push(@files, $1);
+    if ($File::Find::name =~ /content\/(.*\/)?(.+\.html)$/i) {
+        if (length($1) == 0) {
+            push(@files, $2);
+        } else {
+            my $dir = substr($1, 0, -1);
+            if (!$dirs->{$dir}) {
+                $dirs->{$dir} = ();
+            }
+            push(@{ $dirs->{$dir} }, $2);
+        }
     }
 }
 
@@ -121,10 +132,20 @@ if ($loggedin) {
         print "
         <div class='section'>
             <h2>Edit Page</h2>
-            <ul>";
+            <ul class='dirlist'>";
 
         for my $file (@files) {
             print "<li><a href='?edit=$file'>$file</a></li>";
+        }
+
+        for my $dir (keys %$dirs) {
+            print "<li class='dir closed'><span>$dir</span><ul>";
+
+            for my $file (@{ $dirs->{$dir} }) {
+                print "<li><a href='?edit=$dir/$file'>$file</a></li>";
+            }
+
+            print "</ul></li>"
         }
 
         print "
