@@ -31,7 +31,7 @@ var show = function(element) {
 window.addEventListener("load", function() {
     var elements = document.querySelectorAll("ul.dirlist li.dir");
     Array.prototype.forEach.call(elements, function(element) {
-        element.addEventListener("click", function() {
+        element.querySelector("span").addEventListener("click", function() {
             if (element.className.indexOf("open") != -1) {
                 element.classList.remove("open");
                 element.classList.add("closed");
