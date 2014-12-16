@@ -5,6 +5,8 @@ use CGI;
 use CGI::Carp qw(warningsToBrowser fatalsToBrowser);
 use Digest::MD5 qw(md5);
 use File::Find;
+use HTML::Entities;
+use Encode;
 use strict;
 
 sub header {
@@ -58,8 +60,6 @@ sub wanted {
 }
 
 my %credentials = do 'credentials.pl';
-my $key = "7td694VoppH58sDOnaybIbFdHONlyF";
-
 
 my $query = CGI->new();
 
@@ -69,11 +69,11 @@ my $session = new CGI::Session("driver:File", $query, {Directory=>'/tmp'});
 
 if ($query->param("log_out")) {
     $session->clear(["logged_in"]);
-} elsif ($session->param("logged_in") && $session->param("key") eq md5($credentials{password} . $key)) {
+} elsif ($session->param("logged_in") && $session->param("key") eq md5($credentials{password} . $credentials{key})) {
     $loggedin=1;
 } elsif ($query->param("username") eq $credentials{username} && $query->param("password") eq $credentials{password}) {
     $session->param("logged_in", "true");
-    $session->param("key", md5($credentials{password} . $key));
+    $session->param("key", md5($credentials{password} . $credentials{key}));
     my $cookie = $query->cookie(CGISESSID => $session->id);
     print $query->header(
         -type => "text.html",
@@ -96,7 +96,9 @@ if ($loggedin) {
 
         if ($query->param("content")) {
             open my $content, ">", $source or die "Can't open $source: $!";
-            print $content $query->param("content");
+            my $decoded = $query->param("content");
+            $decoded =~ s/\r//g;
+            print $content $decoded;
             close $content;
         }
 
@@ -110,7 +112,7 @@ if ($loggedin) {
 
         open my $content, "<", $source or die "Can't open $source: $!";
         while (<$content>) {
-            print $_;
+            print encode_entities($_);
         }
         close $content or die "can't close '$content': $!";
 
