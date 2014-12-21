@@ -11,6 +11,8 @@ my %credentials = do 'credentials.pl';
 
 my %sizes = do 'sizes.pl';
 
+my $root = do 'root.pl';
+
 
 sub resize {
     my $file = shift;
@@ -124,6 +126,13 @@ if ($session->param("logged_in") && $session->param("key") eq md5($credentials{p
         print "<img src='$imgDir/$name-thumbnail.jpg' />";
 
     }
+    my $dir = "";
+    if ($query->url_param("dir") && -e "../content/images/" . $query->url_param("dir") && !($query->url_param("dir") =~ /^[\/\\]*\./)) {
+        $dir = $query->url_param("dir");
+    }
+
+
+
 
     print "<html>
         <head>
@@ -137,6 +146,46 @@ if ($session->param("logged_in") && $session->param("key") eq md5($credentials{p
             <input type='file' name='file' />
             <input type='submit' value='Upload' />
             </form>
+
+            <div class='files'>";
+
+        opendir(DIR, "../content/images/$dir") or die $!;
+
+        my $printed = {};
+
+        while (my $file = readdir(DIR)) {
+
+            next if ($file =~ /^\./); #ignore hidden files
+
+            print "<div class='file'>";
+            if (-d "../content/images/$dir/$file") {
+                print "<a href='?dir=$dir/$file'>$dir/$file</a>";
+            } elsif ($file =~ /^([a-zA-Z0-9-_ ]*)\.([a-z]+)$/i) {
+                my $name = $1;
+
+                next if (!(-e "../content/images/$dir/$name-thumbnail.jpg")); #ignore resized images
+
+                print "<img src='../content/images/$dir/$name-thumbnail.jpg' />
+                    <ul>
+                        <li>$root/content/images/$dir/$file</li>";
+
+                for my $size (keys %sizes) {
+                    print "
+                        <li>$root/content/images/$dir/$name-$size.jpg</li>";
+                }
+
+                print "
+                    </ul>";
+            }
+
+            print "</div>";
+
+        }
+
+    closedir(DIR);
+
+        print "
+            </div>
 
         </body>
         </html>";

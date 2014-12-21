@@ -1,4 +1,4 @@
-#!C:/Perl/bin/perl.exe
+#!C:/Perl/bin/perl
 
 use CGI::Session;
 use CGI;
@@ -140,7 +140,7 @@ if ($loggedin) {
             print "<li><a href='?edit=$file'>$file</a></li>";
         }
 
-        for my $dir (keys %$dirs) {
+        for my $dir (sort keys %$dirs) {
             print "<li class='dir closed'><span>$dir</span><ul>";
 
             for my $file (@{ $dirs->{$dir} }) {
