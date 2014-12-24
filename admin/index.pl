@@ -122,6 +122,7 @@ if ($loggedin) {
 
                 <input type='submit' value='save' />
             </form>
+            <iframe id='media' frameborder='0' src='uploader.pl'></iframe>
         </div>"
 
 
