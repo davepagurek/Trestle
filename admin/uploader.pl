@@ -1,4 +1,4 @@
-#!C:/Perl/bin/perl.exe
+#!C:/Perl/bin/perl
 
 use CGI::Session;
 use CGI;
@@ -89,7 +89,16 @@ my $loggedin = 0;
 my $session = new CGI::Session("driver:File", $query, {Directory=>'/tmp'});
 
 if ($session->param("logged_in") && $session->param("key") eq md5($credentials{password} . $credentials{key})) {
+
     print $query->header("text/html");
+
+    #extend expiration
+    $session->expire('+2h');
+
+    my $dir = "";
+    if ($query->url_param("dir") && -e "../content/images/" . $query->url_param("dir") && !($query->url_param("dir") =~ /^[\/\\]*\./)) {
+        $dir = $query->url_param("dir");
+    }
 
     my $file = $query->param('file');
     my $filehandle = $query->upload("file");
@@ -123,24 +132,19 @@ if ($session->param("logged_in") && $session->param("key") eq md5($credentials{p
             $mime = $2;
         }
 
-        print "<img src='$imgDir/$name-thumbnail.jpg' />";
+        $dir = "/$year/$mon";
 
     }
-    my $dir = "";
-    if ($query->url_param("dir") && -e "../content/images/" . $query->url_param("dir") && !($query->url_param("dir") =~ /^[\/\\]*\./)) {
-        $dir = $query->url_param("dir");
-    }
-
-
-
 
     print "<html>
         <head>
         <title>Trestle Media Uploader</title>
         <meta name='viewport' content='width=device-width, initial-scale=1' />
         <link rel='stylesheet' type='text/css' href='style.css' />
+        <script type='text/javascript' src='uploader.js'></script>
         </head>
         <body>
+        <div class='uploader'>
 
             <form method='post' enctype='multipart/form-data'>
             <input type='file' name='file' />
@@ -149,50 +153,61 @@ if ($session->param("logged_in") && $session->param("key") eq md5($credentials{p
 
             <div class='files'>";
 
-        opendir(DIR, "../content/images/$dir") or die $!;
+    if ($dir =~ /(.*)[\/\\].+/) {
+        my $parent = $1;
+        print "
+            <div class='file'>
+                <a href='?dir=$parent'>/..</a>
+            </div>";
+    }
 
-        my $printed = {};
 
-        while (my $file = readdir(DIR)) {
+    opendir(DIR, "../content/images/$dir") or die $!;
 
-            next if ($file =~ /^\./); #ignore hidden files
+    my $printed = {};
 
-            print "<div class='file'>";
-            if (-d "../content/images/$dir/$file") {
-                print "<a href='?dir=$dir/$file'>$dir/$file</a>";
-            } elsif ($file =~ /^([a-zA-Z0-9-_ ]*)\.([a-z]+)$/i) {
-                my $name = $1;
+    while (my $file = readdir(DIR)) {
 
-                next if (!(-e "../content/images/$dir/$name-thumbnail.jpg")); #ignore resized images
+        next if ($file =~ /^\./); #ignore hidden files
 
-                print "<img src='../content/images/$dir/$name-thumbnail.jpg' />
-                    <ul>
-                        <li>$root/content/images/$dir/$file</li>";
+        if (-d "../content/images/$dir/$file") {
+            print "<div class='file'>
+                <a href='?dir=$dir/$file'>$dir/$file</a>
+                </div>";
+        } elsif ($file =~ /^([a-zA-Z0-9-_ ]*)\.([a-z]+)$/i) {
+            my $name = $1;
 
-                for my $size (keys %sizes) {
-                    print "
-                        <li>$root/content/images/$dir/$name-$size.jpg</li>";
-                }
+            next if (!(-e "../content/images/$dir/$name-thumbnail.jpg")); #ignore resized images
 
+            print "<div class='file'>
+                <img src='../content/images$dir/$name-thumbnail.jpg' />
+                <ul>
+                    <li><input type='text' value='%root%/content/images$dir/$file' /></li>";
+
+            for my $size (keys %sizes) {
                 print "
-                    </ul>";
+                    <li><input type='text' value='%root%/content/images$dir/$name-$size.jpg' /></li>";
             }
 
-            print "</div>";
-
+            print "
+                </ul>
+                </div>";
         }
+
+    }
 
     closedir(DIR);
 
         print "
             </div>
 
+        </div>
         </body>
         </html>";
 
 
 
 } else {
-    print $query->redirect( -uri=>'index.pl', -nph=>1 );
+    print $query->redirect("$root/admin/index.pl");
 }
 

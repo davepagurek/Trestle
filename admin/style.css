@@ -63,6 +63,14 @@ input[type="button"]:hover, input[type="submit"]:hover {
     background-color:#28B;
 }
 
+a, a:visited {
+    color:#069;
+}
+
+a:hover {
+    color:#28B;
+}
+
 /* Logged in */
 #header {
     background-color:#333;
@@ -98,6 +106,20 @@ input[type="button"]:hover, input[type="submit"]:hover {
     max-width:1100px;
     padding:20px;
     margin:20px auto;
+}
+
+.full form {
+    width:70%;
+    display:inline-block;
+    vertical-align: top;
+}
+
+.full iframe {
+    width:25%;
+    margin-left:3%;
+    display:inline-block;
+    vertical-align:top;
+    height:500px;
 }
 
 textarea {
@@ -148,3 +170,73 @@ ul.dirlist li ul {
     height:0;
 }
 
+/* Uploader */
+html, body {
+    height:100%;
+    min-height:100%;
+    overflow:hidden;
+}
+.uploader {
+    overflow-x:hidden;
+    height:100%;
+    overflow-y:auto;
+    padding-right:10px;
+}
+
+.uploader::-webkit-scrollbar-track
+{
+    background-color: transparent;
+}
+
+.uploader::-webkit-scrollbar
+{
+    width: 6px;
+    background-color: #F5F5F5;
+
+}
+
+.uploader::-webkit-scrollbar-thumb
+{
+    background-color: #666666;
+}
+
+.uploader input[type="file"] {
+    display:block;
+    margin: 0 0 10px 0;
+}
+
+.uploader input[type="submit"] {
+    display:block;
+    margin:0;
+    box-sizing: border-box;
+    width:100%;
+    margin-bottom: 20px;
+}
+
+.uploader .file {
+    padding:20px 0;
+    border-bottom: 1px solid #666;
+}
+
+.uploader .file:last-child {
+    border-bottom: 0;
+}
+
+.uploader img {
+    display:block;
+    margin: 0 auto;
+    max-width:100%;
+}
+
+.uploader .file ul {
+    list-style-type: none;
+    margin:0;
+    padding: 0;
+}
+
+.uploader .file input[type="text"] {
+    display:block;
+    margin:4px 0;
+    box-sizing: border-box;
+    width:100%;
+}

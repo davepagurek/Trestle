@@ -95,25 +95,35 @@ sub new {
 
 				#If it's in a code tag, don't format innards
 				if ($line =~ /(.*<(?:code|pre).*?>)(.*)(<\/(?:code|pre).*)/) {
-					$content .= $1 . $cgi->escapeHTML($2) . $3 . "\n";
+					my $start = $1;
+					my $end = $3;
+					$start =~ s/\%root\%/$root/g;
+					$end =~ s/\%root\%/$root/g;
+					$content .= $start . $cgi->escapeHTML($2) . $end . "\n";
 				} elsif ($line =~ /(.*<(?:code|pre).*?>)(.*)/) {
 					$isCode = 1;
-					$content .= $1;
+					my $start = $1;
+					$start =~ s/\%root\%/$root/g;
+					$content .= $start;
 					if ($2) {
 						$content .= $cgi->escapeHTML($2) . "\n";
 					}
 				} elsif ($isCode) {
 					if ($line =~ /(.*)(<\/(?:code|pre).*)/) {
 						$isCode = 0;
-						$content .= $cgi->escapeHTML($1) . $2 . "\n";
+						my $end = $2;
+						$end =~ s/\%root\%/$root/g;
+						$content .= $cgi->escapeHTML($1) . $end . "\n";
 					} else {
 						$content .= $cgi->escapeHTML($line) . "\n";
 					}
 
 				#If paragraphing is off or it's in a heading or p tag, don't wrap in a p tag
 				} elsif (($self->{paragraph} && $self->{paragraph} eq "false") || $line =~ /(?:^<(?:h(?:[0-9]+)|ul|li|table|th|tr|td|p).*>)|(?:<\/(?:h(?:[0-9]+)|ul|li|table|th|tr|td|p)>$)/i) {
+					$line =~ s/\%root\%/$root/g;
 					$content .= $line . "\n";
 				} else {
+					$line =~ s/\%root\%/$root/g;
 					$content .= "<p>" . $line . "</p>\n";
 				}
 			}
