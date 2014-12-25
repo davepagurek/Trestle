@@ -151,7 +151,7 @@ sub meta {
 	if (exists $self->{$value}) {
 		return $self->{$value};
 	} else {
-		return 0;
+		return undef;
 	}
 }
 
