@@ -20,8 +20,15 @@ sub footer {
 		  <div class='wrapper'>
 		    <p>My name is Dave and I'm an animator, musician, programmer, designer and artist.</p>
 		    <p>Want to get in touch? Find/contact me elsewhere:</p>
-		    <p><a href='mailto:dave\@davepagurek.com' class='button'>dave\@davepagurek.com</a> <a href='http://davepvm.tumblr.com/' class='button external' target='_blank'>Tumblr</a> <a href='http://pahgawk.deviantart.com/' class='button external' target='_blank'>DeviantART</a> <a href='http://pahgawk.newgrounds.com/' class='button external' target='_blank'>Newgrounds</a> <a href='http://www.youtube.com/pahgawk' class='button external' target='_blank'>YouTube</a> <a href='http://www.twitter.com/davepvm' class='button external' target='_blank'>Twitter</a> <a href='http://pahgawks.bandcamp.com/' class='button external' target='_blank'>Bandcamp</a> <a href='http://soundcloud.com/davidpvm' class='button external' target='_blank'>Soundcloud</a> <a href='https://github.com/pahgawk/' class='button external' target='_blank'>GitHub</a>
-		      </p>
+		    	<p>
+		    		<a href='mailto:dave\@davepagurek.com' class='button'>dave\@davepagurek.com</a>
+		    		<a href='https://github.com/pahgawk/' class='button external' target='_blank'>GitHub</a>
+		    		<a href='http://codepen.io/davepvm/' class='button external' target='_blank'>CodePen</a>
+		    		<a href='http://pahgawk.newgrounds.com/' class='button external' target='_blank'>Newgrounds</a>
+		    		<a href='http://www.youtube.com/pahgawk' class='button external' target='_blank'>YouTube</a>
+		    		<a href='http://pahgawks.bandcamp.com/' class='button external' target='_blank'>Bandcamp</a>
+		    		<a href='http://soundcloud.com/davidpvm' class='button external' target='_blank'>Soundcloud</a>
+		     	</p>
 		    </div>
 		</div>
 		</body>

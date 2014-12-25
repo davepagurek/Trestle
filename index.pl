@@ -6,6 +6,12 @@ use Category;
 use strict;
 
 my %config = do 'config.pl';
+
+if ($config{dev}) {
+	require CGI::Carp;
+	CGI::Carp->import(qw(warningsToBrowser fatalsToBrowser)) if CGI::Carp -> can ("import");
+}
+
 my $query = CGI->new();
 my $pageName = $query->param("page") || "index";
 $pageName =~ s/\/+$//;
