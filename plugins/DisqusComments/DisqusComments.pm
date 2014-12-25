@@ -9,7 +9,10 @@ sub new {
 
 	$self->{pages} = 1;
 	$self->{shortname} = shift;
-	$self->{default} = shift || 1;
+	$self->{default} = shift;
+	if (!(defined $self->{default})) {
+		$self->{default} = shift;
+	}
 
 	bless $self, $class;
 	return $self;
@@ -17,7 +20,6 @@ sub new {
 
 sub content {
 	my ($self, $content, $page) = @_;
-
 	if ($page->meta("comments") == 1 || (!(defined $page->meta("comments")) && $self->{default})) {
 		$disqus = "<div class='section odd'><div class='wrapper'><div id='disqus_thread'></div></div></div>
 		    <script type='text/javascript'>
