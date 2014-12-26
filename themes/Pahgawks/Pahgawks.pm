@@ -45,7 +45,7 @@ sub header {
 	my $source = "<html>
 	<head>
 	<title>" .
-		$title .
+		(($category eq "about")?$title:"$title - Dave Pagurek") .
 		"</title>
 		<link href='http://fonts.googleapis.com/css?family=Bitter:400' rel='stylesheet' type='text/css'>
 		<link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,300' rel='stylesheet' type='text/css'>
