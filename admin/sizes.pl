@@ -8,7 +8,7 @@ use strict;
         "quality" => 85
     },
     "medium" => {
-        "width" => 800,
+        "width" => 820,
         "height" => 550,
         "crop" => 0,
         "quality" => 90

@@ -576,17 +576,6 @@ img.art {
   .section {
     padding:20px;
   }
-  .half {
-    width:auto;
-    display:block;
-    margin-bottom:20px;
-  }
-  .half.left .padding, .half.right .padding, .padding {
-    padding:20px 0;
-  }
-  .half .left {
-    margin-top:0;
-  }
   #footer p {
     text-align:left;
   }
@@ -601,6 +590,19 @@ img.art {
   }
   iframe.youtube {
     height:450px;
+  }
+}
+@media all and (max-width: 850px) {
+  .half {
+    width:auto;
+    display:block;
+    margin-bottom:20px;
+  }
+  .half.left .padding, .half.right .padding, .padding {
+    padding:20px 0;
+  }
+  .half .left {
+    margin-top:0;
   }
 }
 @media all and (max-width:700px) {
