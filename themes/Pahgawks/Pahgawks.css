@@ -635,6 +635,12 @@ img.art {
     margin:10px 0;
   }
 }
+@media all and (max-width:580px) {
+  .animation {
+    display:block;
+    margin:40px auto 0 auto;
+  }
+}
 @media all and (max-width:500px) {
   h1 {
     font-size:45px;
