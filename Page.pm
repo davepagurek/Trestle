@@ -4,6 +4,7 @@ use CGI;
 use JSON;
 use strict;
 
+#Convert a yyy-mm-dd date string to a hashref with date components
 sub timeFormat {
 	my ($timeStr) = @_;
 	my $time = {};
@@ -32,34 +33,46 @@ sub timeFormat {
 }
 
 sub new {
-	my $class = shift;
 	my $self = { };
+	
+	my $class = shift;
 	my $source = shift;
 	my $root = shift;
+	my $onlyMeta = shift;
+
+	#Get the proper url of the source file on the server
 	my $url = $source;
 	$url =~ s/^content\/(.*).html$/$root\/$1/;
+
+	#Set public properties
 	$self->{source} = $source;
 	$self->{url} = $url;
 	$self->{root} = $root;
-	my $onlyMeta = shift;
+	
 	my $cgi = CGI->new();
 	my $json = JSON->new->allow_nonref;
+
 	if (-e $source) {
 		open my $page, "<", $source or die "Can't open $source: $!";
 		my $meta = 0;
 		my $metaSource = "";
 		my $content = "";
 		my $isCode = 0;
+
+		#Read the source file
 		while (<$page>) {
 			chomp;
 			my $line = $_;
+
+			#We're reading line by line, so if we encounter a newline it is a problem and should be removed
 			$line =~ s/\n//g;
+
+			#If we're not reading a code snippet, remove proceeding whitespace
 			if (!$isCode) {
 				$line =~ s/^\s+|\s+$//g;
 			}
 
-			#print $line . " END\n";
-
+			#If we encounter the beginning of the meta information HTML comment, go to meta mode
 			if (!$isCode && $line =~ /<!--$/) {
 				$meta = 1;
 				next;
@@ -69,11 +82,14 @@ sub new {
 			if (!$line) {
 				next;
 
+			#If we're in meta mode
 			} elsif ($meta) {
 
-				#Four hash signs indicates the end of the meta section
+				#If we encounter the end of the meta comment block
 				if ($line =~ /^-->/) {
 					$meta = 0;
+
+					#Create a hashref out of the meta JSON info
 					my $metaJSON = $json->decode($metaSource);
 					foreach my $key (keys %$metaJSON) {
 						$self->{$key} = $metaJSON->{$key};
@@ -82,13 +98,18 @@ sub new {
 						$self->{date} = timeFormat($self->{date});
 					}
 
+					#If we are on a category page and don't need the actual post content, stop reading the rest
 					if ($onlyMeta) {
 						last;
 					}
 
-				#Add meta values if they exist
+				#Keep building up the meta string if we aren't at the end yet
 				} else {
+
+					#Replace %root% with the actual server root
                     $line =~ s/\%root\%/$root/g;
+
+                    #Add the line
 					$metaSource .= $line . "\n";
 				}
 			} else {
@@ -122,6 +143,8 @@ sub new {
 				} elsif (($self->{paragraph} && $self->{paragraph} eq "false") || $line =~ /(?:^<(?:h(?:[0-9]+)|ul|li|table|th|tr|td|p).*>)|(?:<\/(?:h(?:[0-9]+)|ul|li|table|th|tr|td|p)>$)/i) {
 					$line =~ s/\%root\%/$root/g;
 					$content .= $line . "\n";
+
+				#otherwise, wrap in a p tag
 				} else {
 					$line =~ s/\%root\%/$root/g;
 					$content .= "<p>" . $line . "</p>\n";

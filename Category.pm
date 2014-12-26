@@ -6,23 +6,30 @@ use JSON;
 use strict;
 
 sub new {
-	my $class = shift;
 	my $self = { };
+
+	my $class = shift;
 	my $sourceDir = shift;
+	$self->{root} = shift;
+	
+	#Grab the directory name from the file path
 	if ($sourceDir =~ /^content\/+(.+)$/) {
 		$self->{dir} = $1;
 	}
-	$self->{root} = shift;
-
+	
 	my $json = JSON->new->allow_nonref;
 	
+	#Make a new page for every html file in the directory
 	my @pages = ();
 	foreach my $pageFile (glob("$sourceDir/*.html")) {
 		$pageFile =~ s/\/+/\//g;
 		push(@pages, Page->new($pageFile, $self->{root}, 1));
 	}
+
+	#Sort the pages in reverse chronological order by release date
 	@{ $self->{pages} } = sort { $b->meta("date")->{full} <=> $a->meta("date")->{full} } @pages;
 
+	#Read the category.json file for the category into a hashref to get the full name and other metadata
 	my $contents = do {
 		local $/;
 		open my $fh, $sourceDir . "/category.json" or die "Can't open category.json from $sourceDir: $!";
@@ -43,7 +50,7 @@ sub info {
 	if (exists $self->{$value}) {
 		return $self->{$value};
 	} else {
-		return 0;
+		return undef;
 	}
 }
 
