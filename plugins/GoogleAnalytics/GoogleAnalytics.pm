@@ -10,7 +10,7 @@ sub new {
 	$self->{pages} = 1;
 	$self->{categories} = 1;
 	$self->{archives} = 1;
-	$self->{main} = 1;
+	$self->{index} = 1;
 	$self->{error} = 1;
 
 
