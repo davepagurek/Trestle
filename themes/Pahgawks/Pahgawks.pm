@@ -62,7 +62,7 @@ sub header {
 		      <div id='links'>
 		      <a href='" . $root . "'" . ($category eq "about" ? " class='selected'" : "") . ">About</a>
 		      <a href='" . $root . "/blog'" . ($category eq "blog" ? " class='selected'" : "") . ">Blog</a>
-		      <a href='" . $root . "/archives'" . (!($category eq "about" || $category eq "blog") ? " class='selected'" : "") . ">Portfolio</a>
+		      <a href='" . $root . "/archives'" . (!($category eq "about" || $category eq "blog" || $category eq "error") ? " class='selected'" : "") . ">Portfolio</a>
 		    </div>
 		  </div>
 		</div>";
@@ -149,10 +149,10 @@ sub dir {
 		<div class='wrapper'>
 		<h1 class='cat'>" . $category->info("name") . "</h1>
 		<p>
-		<a href='" . $category->info("root") . "/film' class='cat'>Animation</a>
 		<a href='" . $category->info("root") . "/programming' class='cat'>Programming</a>
-		<a href='" . $category->info("root") . "/art' class='cat'>Art</a>
+		<a href='" . $category->info("root") . "/film' class='cat'>Animation</a>
 		<a href='" . $category->info("root") . "/music' class='cat'>Music</a>
+		<a href='" . $category->info("root") . "/art' class='cat'>Art</a>
 		<a href='" . $category->info("root") . "/blog' class='cat'>Blog</a>
 		<a href='" . $category->info("root") . "/archives' class='cat'>Everything</a>
 		</p>";
@@ -222,10 +222,10 @@ sub archives {
 		<div class='wrapper'>
 		<h1 class='cat'>Everything</h1>
 		<p>
-		<a href='" . $root . "/film' class='cat'>Animation</a>
 		<a href='" . $root . "/programming' class='cat'>Programming</a>
-		<a href='" . $root . "/art' class='cat'>Art</a>
+		<a href='" . $root . "/film' class='cat'>Animation</a>
 		<a href='" . $root . "/music' class='cat'>Music</a>
+		<a href='" . $root . "/art' class='cat'>Art</a>
 		<a href='" . $root . "/blog' class='cat'>Blog</a>
 		<a href='" . $root . "/archives' class='cat'>Everything</a>
 		</p>
@@ -298,7 +298,7 @@ sub error {
 
 	my $source = "";
 
-	$source .= $self->header("", "Page Not Found", $root);
+	$source .= $self->header("error", "Page Not Found", $root);
 
 	$source .= "<div class='section'>
 			<div class='wrapper'>
@@ -306,13 +306,14 @@ sub error {
 				<img class='aligncenter' src='$root/content/images/2014/12/404.jpg' />
 				<p>Sadly, the page you were looking for is not actually here. If you think a link on the site is broken or something, <a href='mailto:dave\@davepagurek.com'>send me an email</a> and I'll try to fix it. Otherwise, you can probably find what you were looking for somewhere in one of these categories:</p>
 
+				<p>
+				<a href='" . $root . "/programming' class='cat'>Programming</a>
 				<a href='" . $root . "/film' class='cat'>Animation</a>
-				<a href='" . $root . "/games' class='cat'>Games</a>
-				<a href='" . $root . "/art' class='cat'>Visual Art</a>
 				<a href='" . $root . "/music' class='cat'>Music</a>
-				<a href='" . $root . "/webapps' class='cat'>Web and App Programming</a>
+				<a href='" . $root . "/art' class='cat'>Art</a>
 				<a href='" . $root . "/blog' class='cat'>Blog</a>
-				<a href='" . $root . "/archives' class='cat'><strong>Everything</strong></a>
+				<a href='" . $root . "/archives' class='cat'>Everything</a>
+				</p>
 				</div>
 			</div>
 
