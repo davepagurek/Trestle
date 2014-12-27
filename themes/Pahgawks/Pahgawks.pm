@@ -303,7 +303,7 @@ sub error {
 	$source .= "<div class='section'>
 			<div class='wrapper'>
 				<h1>Page Not Found</h1>
-				<img class='aligncenter' src='http://www.davepagurek.com/wp-content/uploads/2012/02/404.jpg' />
+				<img class='aligncenter' src='$root/content/images/2014/12/404.jpg' />
 				<p>Sadly, the page you were looking for is not actually here. If you think a link on the site is broken or something, <a href='mailto:dave\@davepagurek.com'>send me an email</a> and I'll try to fix it. Otherwise, you can probably find what you were looking for somewhere in one of these categories:</p>
 
 				<a href='" . $root . "/film' class='cat'>Animation</a>
