@@ -5,6 +5,7 @@ use CGI;
 use CGI::Carp qw(warningsToBrowser fatalsToBrowser);
 use Digest::MD5 qw(md5);
 use File::Find;
+use File::Path qw(rmtree);
 use HTML::Entities;
 use Encode;
 use strict;
@@ -153,7 +154,18 @@ if ($loggedin) {
 
         print "
             </ul>
-        </div>";
+        </div>
+        <div class='setion'>
+            <form method='post' id='clearCache'>
+                <input type='hidden' name='clear_cache' id='clear_cache' value='true' />
+                <input type='submit' value='Clear Cache' />
+            </form>
+        ";
+        if ($query->param("clear_cache") && $query->param("clear_cache") eq "true") {
+            rmtree("../cache");
+            print "<p>Cache cleared successfully.</p>"
+        }
+        print "</div>";
 
         print footer();
     }
