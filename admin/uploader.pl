@@ -37,6 +37,9 @@ sub resize {
         my ($w,$h) = $img->getBounds(); # find dimensions
 
         for my $size (keys %sizes) {
+            if ($w < $sizes{$size}->{width} || $h < $sizes{$size}->{height}) {
+                next;
+            }
             if ($sizes{$size}->{crop}) {
                 my ($cut,$xcut,$ycut);
                 if ($w>$h){
@@ -111,8 +114,11 @@ if ($session->param("logged_in") && $session->param("key") eq md5($credentials{p
         $mon += 1;
 
         my $imgDir = "../content/images/$year/$mon";
+        if (!-d "../content/images/$year") {
+            mkdir "../content/images/$year" or die "Unable to create ../content/images/$year: $!";
+        }
         if (!-d $imgDir) {
-            mkdir $imgDir or die "Unable to create $imgDir";
+            mkdir $imgDir or die "Unable to create $imgDir: $!";
         }
 
         binmode($filehandle);
@@ -185,8 +191,10 @@ if ($session->param("logged_in") && $session->param("key") eq md5($credentials{p
                     <li><input type='text' value='%root%/content/images$dir/$file' /></li>";
 
             for my $size (keys %sizes) {
-                print "
-                    <li><input type='text' value='%root%/content/images$dir/$name-$size.jpg' /></li>";
+                if (-e "../content/images$dir/$name-$size.jpg") {
+                    print "
+                        <li><input type='text' value='%root%/content/images$dir/$name-$size.jpg' /></li>"; 
+                }
             }
 
             print "
