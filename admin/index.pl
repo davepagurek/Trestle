@@ -10,6 +10,9 @@ use HTML::Entities;
 use Encode;
 use strict;
 
+
+my $loggedin = 0;
+
 sub header {
     my ($title) = @_;
     my $output = "<!DOCTYPE html>
@@ -29,12 +32,16 @@ sub header {
     </head>
     <body>
         <div id='header'>
-            <h1><a href='index.pl'>Trestle Admin</a></h1>
+            <h1><a href='index.pl'>Trestle Admin</a></h1>";
+
+    if ($loggedin) {
+        $output .="
             <form method='post' id='logout'>
                 <input type='hidden' name='log_out' id='log_out' value='true' />
                 <input type='submit' value='Log Out' />
-            </form>
-        </div>";
+            </form>";
+    }
+    $output .= "</div>";
     return $output;
 }
 
@@ -64,7 +71,6 @@ my %credentials = do 'credentials.pl';
 
 my $query = CGI->new();
 
-my $loggedin = 0;
 
 my $session = new CGI::Session("driver:File", $query, {Directory=>'/tmp'});
 
