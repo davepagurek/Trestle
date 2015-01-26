@@ -49,6 +49,7 @@ sub header {
 		"</title>
 		<link href='http://fonts.googleapis.com/css?family=Bitter:400' rel='stylesheet' type='text/css'>
 		<link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,300' rel='stylesheet' type='text/css'>
+		<meta http-equiv='X-UA-Compatible' content='IE=Edge'/>
 		<meta name='theme-color' content='#e74c3c' />
 		<meta name='viewport' content='width=device-width' />
 		<link href='" . $root . "/themes/Pahgawks/Pahgawks.css' rel='stylesheet' type='text/css'>
