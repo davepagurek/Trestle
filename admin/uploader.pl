@@ -37,7 +37,7 @@ sub resize {
         my ($w,$h) = $img->getBounds(); # find dimensions
 
         for my $size (keys %sizes) {
-            if ($w < $sizes{$size}->{width} || $h < $sizes{$size}->{height}) {
+            if ($w < $sizes{$size}->{width} && $h < $sizes{$size}->{height}) {
                 next;
             }
             if ($sizes{$size}->{crop}) {
@@ -46,8 +46,7 @@ sub resize {
                     $cut=$h;
                     $xcut=(($w-$h)/2);
                     $ycut=0;
-                }
-                if ($w<$h){
+                } else {
                     $cut=$w;
                     $xcut=0;
                     $ycut=(($h-$w)/2);
@@ -193,7 +192,7 @@ if ($session->param("logged_in") && $session->param("key") eq md5($credentials{p
             for my $size (keys %sizes) {
                 if (-e "../content/images$dir/$name-$size.jpg") {
                     print "
-                        <li><input type='text' value='%root%/content/images$dir/$name-$size.jpg' /></li>"; 
+                        <li><input type='text' value='%root%/content/images$dir/$name-$size.jpg' /></li>";
                 }
             }
 
