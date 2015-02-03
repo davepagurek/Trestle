@@ -41,12 +41,12 @@ sub header {
                 <input type='submit' value='Log Out' />
             </form>";
     }
-    $output .= "</div>";
+    $output .= "</div><div class='container'>";
     return $output;
 }
 
 sub footer {
-    my $output = "</body>
+    my $output = "</div></body>
     </html>";
     return $output;
 }
@@ -73,6 +73,7 @@ my $query = CGI->new();
 
 
 my $session = new CGI::Session("driver:File", $query, {Directory=>'/tmp'});
+my $message = "";
 
 if ($query->param("log_out")) {
     $session->clear(["logged_in"]);
@@ -87,6 +88,8 @@ if ($query->param("log_out")) {
         -cookie => $cookie
     );
     $loggedin=1;
+} elsif ($query->param("username") || $query->param("password")) {
+    $message = "Incorrect login.";
 }
 
 print $query->header("text/html") unless $query->{".header_printed"};
@@ -140,7 +143,7 @@ if ($loggedin) {
         print header("Dashboard");
 
         print "
-        <div class='section'>
+        <div class='section'><div class='wrapper'>
             <h2>Edit Page</h2>
             <ul class='dirlist'>";
 
@@ -160,8 +163,9 @@ if ($loggedin) {
 
         print "
             </ul>
-        </div>
-        <div class='setion'>
+        </div></div>
+        <div class='section'><div class='wrapper'>
+            <h2>Management</h2>
             <form method='post' id='clearCache'>
                 <input type='hidden' name='clear_cache' id='clear_cache' value='true' />
                 <input type='submit' value='Clear Cache' />
@@ -169,9 +173,9 @@ if ($loggedin) {
         ";
         if ($query->param("clear_cache") && $query->param("clear_cache") eq "true") {
             rmtree("../cache");
-            print "<p>Cache cleared successfully.</p>"
+            print "<p class='message'>Cache cleared successfully.</p>"
         }
-        print "</div>";
+        print "</div></div>";
 
         print footer();
     }
@@ -180,8 +184,13 @@ if ($loggedin) {
 
     print header("Log In");
     print "
-        <h1>Trestle Login</h1>
+        <h1>Trestle Login</h1>";
 
+    if ($message) {
+        print "<p class='message'>$message</p>";
+    }
+
+    print "
         <form method='post' id='login'>
             <div class='line'>
                 <label for='username'>Username</label>
