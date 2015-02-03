@@ -159,6 +159,9 @@ if ($remake) {
 
     if ($cache) {
         my $cacheDir = "cache/" . $dir;
+        if (!-d "cache") {
+            mkdir "cache" or die "Unable to create cache: $1";
+        }
         if (!-d $cacheDir) {
             mkdir $cacheDir or die "Unable to create $cacheDir: $!";
         }
