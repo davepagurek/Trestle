@@ -66,6 +66,9 @@ sub wanted {
         }
     }
 }
+sub preprocess {
+    sort {  uc $a cmp uc $b } @_;
+}
 
 my %credentials = do 'credentials.pl';
 
@@ -138,7 +141,10 @@ if ($loggedin) {
 
     } else {
 
-        find \&wanted, "../content";
+        find ({
+            "wanted" => \&wanted,
+            "preprocess" => \&preprocess
+        }, "../content");
 
         print header("Dashboard");
 
