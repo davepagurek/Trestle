@@ -1,0 +1,25 @@
+<html>
+    <head>
+        <title>
+            <TMPL_VAR NAME="title"><TMPL_IF NAME="isAbout"> - Dave Pagurek</TMPL_IF>
+        </title>
+        <link href='http://fonts.googleapis.com/css?family=Bitter:400' rel='stylesheet' type='text/css'>
+        <link href='http://fonts.googleapis.com/css?family=Open+Sans:300italic,300' rel='stylesheet' type='text/css'>
+        <meta http-equiv='X-UA-Compatible' content='IE=Edge'/>
+        <meta name='theme-color' content='#e74c3c' />
+        <meta name='viewport' content='width=device-width' />
+        <link href='<TMPL_VAR NAME="root">/themes/Pahgawks/Pahgawks.css' rel='stylesheet' type='text/css'>
+    </head>
+    <body>
+        <div id='title'><h1><a href='http://www.davepagurek.com'>Dave Pagurek</a></h1></div>
+        <div class='section' id='menu'>
+            <a id='menuLabel' onclick="(document.getElementById('menu').className=='section')?document.getElementById('menu').className='section open':document.getElementById('menu').className='section';">Menu</a>
+            <div class='wrapper'>
+            <a href='http://www.davepagurek.com' class='title'>Dave Pagurek</a>
+            <div id='links'>
+            <a href='<TMPL_VAR NAME="root">'<TMPL_IF NAME="isAbout"> class='selected'</TMPL_IF>>About</a>
+            <a href='<TMPL_VAR NAME="root">/blog' <TMPL_IF NAME="isBlog"> class="selected"</TMPL_IF>>Blog</a>
+            <a href='<TMPL_VAR NAME="root">/archives'<TMPL_IF NAME="isPortfolio"> class="selected"</TMPL_IF>>Portfolio</a>
+            </div>
+            </div>
+        </div>
