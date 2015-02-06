@@ -56,7 +56,9 @@
         <div class='wrapper'>
 
             <h1><TMPL_VAR NAME="title"></h1>
+            <TMPL_LOOP NAME="date">
             <div id='date'><TMPL_VAR NAME="mday"> <TMPL_VAR NAME="fullmonth">, <TMPL_VAR NAME="year"></div>
+            </TMPL_LOOP>
 
             <TMPL_IF NAME="awards">
             <div class='awards_full'>

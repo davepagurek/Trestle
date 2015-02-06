@@ -43,73 +43,58 @@ sub content {
 
 sub dir {
     my ($self, $category) = @_;
-    my $source = "";
 
-    #$source .= $self->header($category->info("name"), $category->info("name"), $category->info("root"));
-    $source .= "<div class='section top' id='content'>
-    <div class='wrapper'>
-    <h1 class='cat'>" . $category->info("name") . "</h1>
-    <p>
-    <a href='" . $category->info("root") . "/programming' class='cat'>Programming</a>
-    <a href='" . $category->info("root") . "/film' class='cat'>Animation</a>
-    <a href='" . $category->info("root") . "/music' class='cat'>Music</a>
-    <a href='" . $category->info("root") . "/art' class='cat'>Art</a>
-    <a href='" . $category->info("root") . "/blog' class='cat'>Blog</a>
-    <a href='" . $category->info("root") . "/archives' class='cat'>Everything</a>
-    </p>";
+    my $years = [];
 
     my $oldYear = 0;
     my $yearNum = 0;
     foreach my $page (@{ $category->info("pages") }) {
         if ($oldYear != $page->meta("date")->{year}) {
+            push(@$years, {
+                year => $page->meta("date")->{year},
+                pages => []
+            });
+
             $oldYear = $page->meta("date")->{year};
             $yearNum++;
-            $source .= "</div>
-            </div>
-            <div class='section archive" . ($yearNum%2==0?"":" odd") . "' id='content'>
-            <div class='wrapper icons'>
-            <h2>" . $page->meta("date")->{year} . "</h2>";
         }
 
-        $source .= "<div class='animation'><div class='icon' style='background-image:url(" . $page->meta("thumbnail") . ")'><a href=" . $page->meta("url") . "></a></div><div class='info'><a class='title' href='" . $page->meta("url") . "''>" . $page->meta("title") . "</a>";
-
-        if ($page->meta("awards")) {
-            $source .= "<div class='awards'>\n";
-            foreach my $award (@{ $page->meta("awards") }) {
-                $source .= "<div class='" . $award->{award} . "' title='" . $award->{description} . "''></div>";
-            }
-            $source .= "</div>\n";
-        }
-
+        my $languages = "";
+        my $j = 0;
         if ($page->meta("languages")) {
-            $source .= "<div class='languages'>Made with ";
-            my $j = 0;
             foreach my $language (@{ $page->meta("languages") }) {
-                $source .= $language;
+                $languages .= $language;
                 if (scalar @{ $page->meta("languages") } == 2 && $j == 0) {
-                    $source .= " and ";
+                    $languages .= " and ";
                 } elsif ($j == scalar @{ $page->meta("languages") }-2) {
-                    $source .= ", and ";
+                    $languages .= ", and ";
                 } elsif ($j<scalar @{ $page->meta("languages") }-1) {
-                    $source .= ", ";
+                    $languages .= ", ";
                 }
                 $j++;
             }
-            $source .= "</div>";
         }
 
-        $source .= "<p>" . $page->meta("excerpt") . "</p>";
-        $source .= "<div class='date'>" . $page->meta("date")->{mday} . " " . $page->meta("date")->{fullmonth} . ", " . $page->meta("date")->{year} . "</div>
-        </div>
-        </div>";
+        push(@{ $years->[$yearNum-1]->{"pages"} }, {
+            title => $page->meta("title"),
+            date => $page->template("date"),
+            awards => $page->template("awards"),
+            languages => $languages,
+            excerpt => $page->meta("excerpt"),
+            thumbnail => $page->meta("thumbnail"),
+            url => $page->meta("url")
+        });
     }
 
-    $source .= "</div>
-    </div>";
-    #$source .= $self->footer();
-
-
-    return $source;
+    return $category->render("themes/Pahgawks/template/dir.tmpl", {
+        title => $category->info("name"),
+        name => $category->info("name"),
+        root => $category->info("root"),
+        years => $years,
+        isAbout => $category->info("name") eq "about",
+        isBlog => $category->info("name") eq "blog",
+        isPortfolio => !($category->info("name") eq "about" || $category->info("name") eq "blog" || $category->info("name") eq "error"),
+    });
 }
 
 sub archives {
