@@ -3,7 +3,7 @@ A light, extensible Perl CMS by Dave Pagurek
 
 <h2>Screenshots</h2>
 Admin interface:
-![Admin interface](http://davepagurek.com/content/images/2015/2/trestle-admin-medium.jpg)
+![Admin interface](http://davepagurek.com/content/images/2015/2/trestle-admin-large.jpg)
 
 <h2>Features</h2>
 <ul>
