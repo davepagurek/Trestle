@@ -3,7 +3,6 @@ package Pahgawks;
 use strict;
 
 use lib "../..";
-use HTML::Template;
 use Page;
 
 sub new {
@@ -19,32 +18,26 @@ sub new {
 
 sub content {
     my ($self, $page) = @_;
-    my $template = HTML::Template->new(
-        filename => "themes/Pahgawks/template/content.tmpl",
-        die_on_bad_params => 0
-    );
 
-    $template->param(
-        title => $page->template("title"),
-        category => $page->template("category"),
+    return $page->render("themes/Pahgawks/template/content.tmpl", {
+        title => $page->meta("title"),
+        category => $page->meta("category"),
         content => $page->content,
-        date => $page->template("date"),
-        awards => $page->template("awards"),
-        isAbout => $page->template("category") eq "about",
-        isBlog => $page->template("category") eq "blog",
-        isPortfolio => !($page->template("category") eq "about" || $page->template("category") eq "blog" || $page->template("category") eq "error"),
-        root => $page->template("root"),
-        youtube => $page->template("youtube"),
-        header => ($page->template("browser") || $page->template("android") || $page->template("embed") || $page->template("video") || $page->template("buttons") || $page->template("art")),
-        art => $page->template("art"),
-        embed => $page->template("embed"),
-        video => $page->template("video"),
-        buttons => $page->template("buttons"),
-        browser => $page->template("browser"),
-        android => $page->template("android"),
-    );
-
-    return $template->output;
+        date => $page->meta("date"),
+        awards => $page->meta("awards"),
+        isAbout => $page->meta("category") eq "about",
+        isBlog => $page->meta("category") eq "blog",
+        isPortfolio => !($page->meta("category") eq "about" || $page->meta("category") eq "blog" || $page->meta("category") eq "error"),
+        root => $page->meta("root"),
+        youtube => $page->meta("youtube"),
+        header => ($page->meta("browser") || $page->meta("android") || $page->meta("embed") || $page->meta("video") || $page->meta("buttons") || $page->meta("art"))?1:0,
+        art => $page->meta("art"),
+        embed => $page->meta("embed"),
+        video => $page->meta("video"),
+        buttons => $page->meta("buttons"),
+        browser => $page->meta("browser"),
+        android => $page->meta("android"),
+    });
 
 }
 
