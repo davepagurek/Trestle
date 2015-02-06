@@ -1,0 +1,80 @@
+<TMPL_INCLUDE NAME="header.tmpl">
+    <TMPL_IF NAME="youtube">
+    <div class='section' id='video'>
+        <div class='wrapper'>
+            <iframe class='youtube' width='560' height='315' src='http://www.youtube.com/embed/<TMPL_VAR NAME="youtube">?rel=0' frameborder='0' allowfullscreen></iframe>
+        </div>
+    </div>
+    </TMPL_IF>
+    <TMPL_IF NAME="header">
+    <div class='section odd'>
+        <div class='wrapper centered'>
+
+        <TMPL_LOOP NAME="browser">
+        <div class='browser big'>
+            <div class='winbutton'></div>
+            <div class='winbutton'></div>
+            <div class='winbutton'></div>
+            <div class='navbar'><TMPL_VAR NAME="url"></div>
+            <a href='<TMPL_VAR NAME="url">'>
+                <img src='<TMPL_VAR NAME="image">' />
+            </a>
+        </div>
+        </TMPL_LOOP>
+
+        <TMPL_LOOP NAME="android">
+        <div class='android big'>
+            <div class='volume'></div>
+            <div class='power'></div>
+            <a href='<TMPL_VAR NAME="url">'>
+                <img src='<TMPL_VAR NAME="image">' />
+            </a>
+        </div>
+        </TMPL_LOOP>
+
+        <TMPL_IF NAME="art">
+        <a href='<TMPL_VAR NAME="art">'><img src='<TMPL_VAR NAME="art">' class='art' /></a>
+        </TMPL_IF>
+
+        <TMPL_VAR NAME="embed">
+
+        <TMPL_VAR NAME="video">
+        
+        <TMPL_IF NAME="buttons">
+        <p>
+            <TMPL_LOOP NAME="buttons">
+            <a class='button' href='<TMPL_VAR NAME="url">'><TMPL_VAR NAME="text"></a>
+            </TMPL_LOOP>
+        </p>
+        </TMPL_IF>
+
+        </div>
+    </div>
+    </TMPL_IF>
+
+    <div class='section' id='content'>
+        <div class='wrapper'>
+
+            <h1><TMPL_VAR NAME="title"></h1>
+            <div id='date'><TMPL_VAR NAME="mday"> <TMPL_VAR NAME="fullmonth">, <TMPL_VAR NAME="year"></div>
+
+            <TMPL_IF NAME="awards">
+            <div class='awards_full'>
+                <table>
+                <TMPL_LOOP NAME="awards">
+                <tr>
+                    <th>
+                        <div class='<TMPL_VAR NAME="award">' title='<TMPL_VAR NAME="description">'></div>
+                    </th>
+                    <td><TMPL_VAR NAME="description"></td>
+                </tr>
+                </TMPL_LOOP>
+
+                </table>
+            </div>
+            </TMPL_IF>
+
+            <TMPL_VAR NAME="content">
+        </div>
+    </div>
+<TMPL_INCLUDE NAME="footer.tmpl">

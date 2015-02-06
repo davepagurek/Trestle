@@ -178,4 +178,19 @@ sub meta {
     }
 }
 
+sub template {
+    my ($self, $value) = @_;
+    if (exists $self->{$value}) {
+        print "$value - " . ref($self->{$value}) . "\n";
+        if (ref($self->{$value}) eq "HASH") {
+            return [ $self->{$value} ];
+        } else {
+            return $self->{$value};
+        }
+    } else {
+        return 0;
+    }
+}
+
+
 1;
