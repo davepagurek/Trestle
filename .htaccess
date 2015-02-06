@@ -1,4 +1,5 @@
 RewriteEngine on
+#AddHandler fcgid-script .pl
 
 
 RewriteCond %{REQUEST_FILENAME} !-f
