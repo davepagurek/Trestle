@@ -179,6 +179,19 @@ sub meta {
     }
 }
 
+sub template {
+    my ($self, $value) = @_;
+    if (exists $self->{$value}) {
+        if (ref($self->{$value}) eq "HASH") {
+            return [ $self->{$value} ];
+        } else {
+            return $self->{$value};
+        }
+
+    } else {
+        return undef;
+    }
+}
 
 sub render {
     my ($self, $templateFile, $values) = @_;

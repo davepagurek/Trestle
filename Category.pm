@@ -3,6 +3,7 @@ package Category;
 use CGI;
 use Page;
 use JSON;
+use HTML::Template;
 use strict;
 
 sub new {
@@ -29,7 +30,7 @@ sub new {
     #Sort the pages in reverse chronological order by release date
     @{ $self->{pages} } = sort { $b->meta("date")->{full} <=> $a->meta("date")->{full} } @pages;
 
-    #Read the category.json file for the category into a hashref to get the full name and other metadata
+    #Read the category.json file for the category into a values to get the full name and other metadata
     my $contents = do {
         local $/;
         open my $fh, $sourceDir . "/category.json" or die "Can't open category.json from $sourceDir: $!";
@@ -52,6 +53,48 @@ sub info {
     } else {
         return undef;
     }
+}
+
+sub removeUndef {
+    my ($self, $values) = @_;
+    if (ref($values) eq "HASH") {
+        for my $key (keys %$values) {
+            if (!(defined $values->{$key})) {
+                delete $values->{$key};
+            } elsif (ref($values->{$key}) =~ /(HASH)|(ARRAY)/) {
+                $values->{$key} = $self->removeUndef($values->{$key});
+            }
+        }
+    } else {
+        for (my $i=0; $i< scalar @$values; $i++) {
+            if (!(defined $values->[$i])) {
+                splice(@$values, $i, 1);
+            } elsif (ref($values->[$i]) =~ /(HASH)|(ARRAY)/) {
+                $values->[$i] = $self->removeUndef($values->[$i]);
+            }
+
+        }
+    }
+    return $values;
+}
+
+sub render {
+    my ($self, $templateFile, $values) = @_;
+    my $template = HTML::Template->new(
+        filename => $templateFile,
+        die_on_bad_params =>  0
+    );
+
+    $values = $self->removeUndef($values);
+
+    for my $key (keys %$values) {
+        if (defined $values->{$key}) {
+            $template->param({ $key => $values->{$key} });
+        }
+    }
+
+    return $template->output;
+
 }
 
 1;

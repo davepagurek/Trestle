@@ -1,0 +1,53 @@
+<TMPL_INCLUDE NAME="header.tmpl">
+
+    <div class='section top archive' id='content'>
+        <div class='wrapper'>
+            <h1 class='cat'><TMPL_VAR NAME="name"></h1>
+            <p>
+                <a href='<TMPL_VAR NAME="root">/programming' class='cat'>Programming</a>
+                <a href='<TMPL_VAR NAME="root">/film' class='cat'>Animation</a>
+                <a href='<TMPL_VAR NAME="root">/music' class='cat'>Music</a>
+                <a href='<TMPL_VAR NAME="root">/art' class='cat'>Art</a>
+                <a href='<TMPL_VAR NAME="root">/blog' class='cat'>Blog</a>
+                <a href='<TMPL_VAR NAME="root">/archives' class='cat'>Everything</a>
+            </p>
+        </div>
+    </div>
+
+    <TMPL_LOOP NAME="years">
+    <div class='section archive'>
+        <div class='wrapper icons'>
+            <h2><TMPL_VAR NAME="year"></h2>
+
+            <TMPL_LOOP NAME="pages">
+            <div class='animation'>
+                <div class='icon' style='background-image:url(<TMPL_VAR NAME="thumbnail">)'>
+                    <a href='<TMPL_VAR NAME="url">'></a>
+                </div>
+                <div class='info'>
+                    <a class='title' href='<TMPL_VAR NAME="url">'><TMPL_VAR NAME="title"></a>
+
+                    <TMPL_IF NAME="awards">
+                    <div class='awards'>
+                        <TMPL_LOOP NAME="awards">
+                        <div class='<TMPL_VAR NAME="award">' title='<TMPL_VAR NAME="description">'></div>
+                        </TMPL_LOOP>
+                    </div>
+                    </TMPL_IF>
+
+                    <TMPL_IF NAME="languages">
+                    <div class='languages'>Made with <TMPL_VAR NAME="languages"></div>
+                    </TMPL_IF>
+
+                    <p><TMPL_VAR NAME="excerpt"></p>
+
+                    <TMPL_LOOP NAME="date">
+                    <div class='date'><TMPL_VAR NAME="mday"> <TMPL_VAR NAME="fullmonth">, <TMPL_VAR NAME="year"></div>
+                    </TMPL_LOOP>
+                </div>
+            </div>
+            </TMPL_LOOP>
+        </div>
+    </div>
+    </TMPL_LOOP>
+<TMPL_INCLUDE NAME="footer.tmpl">
