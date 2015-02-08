@@ -13,59 +13,44 @@
         </div>
     </div>
 
-        foreach my $category (@categories) {
-            $source .= "<div class='section archive" . ($section%2==0?"":" odd") . "' id='content'>
-            <div class='wrapper icons'>
-            <h2>" . $category->info("name") . "</h2>";
+    <TMPL_LOOP NAME="categories">
+    <div class='section archive'>
+        <div class='wrapper icons'>
+            <h2><TMPL_VAR NAME="name"></h2>
 
-            my $pageNum = 0;
-            foreach my $page (@{ $category->info("pages") }) {
-
-                $source .= "<div class='animation'><div class='icon' style='background-image:url(" . $page->meta("thumbnail") . ")'><a href=" . $page->meta("url") . "></a></div><div class='info'><a class='title' href='" . $page->meta("url") . "''>" . $page->meta("title") . "</a>";
-
-                if ($page->meta("awards")) {
-                    $source .= "<div class='awards'>\n";
-                    foreach my $award (@{ $page->meta("awards") }) {
-                        $source .= "<div class='" . $award->{award} . "' title='" . $award->{description} . "''></div>";
-                    }
-                    $source .= "</div>\n";
-                }
-
-                if ($page->meta("languages")) {
-                    $source .= "<div class='languages'>Made with ";
-                    my $j = 0;
-                    foreach my $language (@{ $page->meta("languages") }) {
-                        $source .= $language;
-                        if (scalar @{ $page->meta("languages") } == 2 && $j == 0) {
-                            $source .= " and ";
-                        } elsif ($j == scalar @{ $page->meta("languages") }-2) {
-                            $source .= ", and ";
-                        } elsif ($j<scalar @{ $page->meta("languages") }-1) {
-                            $source .= ", ";
-                        }
-                        $j++;
-                    }
-                    $source .= "</div>";
-                }
-
-                $source .= "<p>" . $page->meta("excerpt") . "</p>";
-                $source .= "<div class='date'>" . $page->meta("date")->{mday} . " " . $page->meta("date")->{fullmonth} . ", " . $page->meta("date")->{year} . "</div>
+            <TMPL_LOOP NAME="pages">
+            <div class='animation'>
+                <div class='icon' style='background-image:url(<TMPL_VAR NAME="thumbnail">)'>
+                    <a href='<TMPL_VAR NAME="url">'></a>
                 </div>
-                </div>";
+                <div class='info'>
+                    <a class='title' href='<TMPL_VAR NAME="url">'><TMPL_VAR NAME="title"></a>
 
-                $pageNum++;
-                if ($pageNum >= 4) {
-                    last;
-                }
-            }
-            $source .= "<div class='centered large'>
-            <a href='" . $category->info("dir") . "' class='button'>View " . $category->info("name") . "</a>
+                    <TMPL_IF NAME="awards">
+                    <div class='awards'>
+                        <TMPL_LOOP NAME="awards">
+                        <div class='<TMPL_VAR NAME="award">' title='<TMPL_VAR NAME="description">'></div>
+                        </TMPL_LOOP>
+                    </div>
+                    </TMPL_IF>
+
+                    <TMPL_IF NAME="languages">
+                    <div class='languages'>Made with <TMPL_VAR NAME="languages"></div>
+                    </TMPL_IF>
+
+                    <p><TMPL_VAR NAME="excerpt"></p>
+
+                    <TMPL_LOOP NAME="date">
+                    <div class='date'><TMPL_VAR NAME="mday"> <TMPL_VAR NAME="fullmonth">, <TMPL_VAR NAME="year"></div>
+                    </TMPL_LOOP>
+                </div>
             </div>
-            </div></div>\n";
-
-            $section++;
-        }
-
-
-        #$source .= $self->footer();
-
+            </TMPL_LOOP>
+            
+            <div class='centered large'>
+                <a href='<TMPL_VAR NAME="dir">' class='button'>View <TMPL_VAR NAME="name"></a>
+            </div>
+        </div>
+    </div>
+    </TMPL_LOOP>
+<TMPL_INCLUDE NAME="footer.tmpl">

@@ -1,4 +1,5 @@
 <TMPL_INCLUDE NAME="header.tmpl">
+<TMPL_UNLESS NAME="isAbout">
     <TMPL_IF NAME="youtube">
     <div class='section' id='video'>
         <div class='wrapper'>
@@ -79,4 +80,7 @@
             <TMPL_VAR NAME="content">
         </div>
     </div>
+<TMPL_ELSE>
+    <TMPL_VAR NAME="content">
+</TMPL_UNLESS>
 <TMPL_INCLUDE NAME="footer.tmpl">

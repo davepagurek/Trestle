@@ -2,7 +2,6 @@ package Page;
 
 use CGI;
 use JSON;
-use HTML::Template;
 use strict;
 
 #Convert a yyy-mm-dd date string to a hashref with date components
@@ -193,26 +192,6 @@ sub template {
     }
 }
 
-sub render {
-    my ($self, $templateFile, $values) = @_;
-    my $template = HTML::Template->new(
-        filename => $templateFile,
-        die_on_bad_params => 0
-    );
-
-    for my $key (keys %$values) {
-        if (defined $values->{$key}) {
-            if (ref($values->{$key}) eq "HASH") {
-                $template->param($key => [ $values->{$key} ]);
-            } else {
-                $template->param($key => $values->{$key});
-            }
-        }
-    }
-
-    return $template->output;
-
-}
 
 
 1;
