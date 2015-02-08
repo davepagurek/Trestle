@@ -1,7 +1,8 @@
 RewriteEngine on
 #AddHandler fcgid-script .pl
+AddHandler cgi-script .fcgi
 
-
+DirectoryIndex index.fcgi
 RewriteCond %{REQUEST_FILENAME} !-f
 RewriteCond %{REQUEST_FILENAME} !-d
-RewriteRule ^([\w\-\/]+)\/?$ index.pl?page=$1
+RewriteRule ^([\w\-\/]+)\/?$ index.fcgi?page=$1
