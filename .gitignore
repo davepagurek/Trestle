@@ -4,7 +4,6 @@ content-old/
 cache/
 scraper.pl
 admin/credentials.pl
-*.fcgi
 
 #################
 ## Eclipse
