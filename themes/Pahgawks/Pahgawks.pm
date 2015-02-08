@@ -3,7 +3,7 @@ package Pahgawks;
 use strict;
 
 use lib "../..";
-use Page;
+use HTML::Template;
 
 sub new {
     my $class = shift;
@@ -15,11 +15,56 @@ sub new {
     return $self;
 }
 
+sub removeUndef {
+    my ($self, $values) = @_;
+    if (ref($values) eq "HASH") {
+        for my $key (keys %$values) {
+            if (!(defined $values->{$key})) {
+                delete $values->{$key};
+            } elsif (ref($values->{$key}) =~ /(HASH)|(ARRAY)/) {
+                $values->{$key} = $self->removeUndef($values->{$key});
+            }
+        }
+    } else {
+        for (my $i=0; $i< scalar @$values; $i++) {
+            if (!(defined $values->[$i])) {
+                splice(@$values, $i, 1);
+            } elsif (ref($values->[$i]) =~ /(HASH)|(ARRAY)/) {
+                $values->[$i] = $self->removeUndef($values->[$i]);
+            }
+
+        }
+    }
+    return $values;
+}
+
+sub render {
+    my ($self, $templateFile, $values) = @_;
+    my $template = HTML::Template->new(
+        filename => $templateFile,
+        die_on_bad_params =>  0
+    );
+
+    $values = $self->removeUndef($values);
+
+    for my $key (keys %$values) {
+        if (defined $values->{$key}) {
+            if (ref($values->{$key}) eq "HASH") {
+                $template->param($key => [ $values->{$key} ]);
+            } else {
+                $template->param($key => $values->{$key});
+            }
+        }
+    }
+
+    return $template->output;
+
+}
 
 sub content {
     my ($self, $page) = @_;
 
-    return $page->render("themes/Pahgawks/template/content.tmpl", {
+    return $self->render("themes/Pahgawks/template/content.tmpl", {
         title => $page->meta("title"),
         category => $page->meta("category"),
         content => $page->content,
@@ -30,10 +75,10 @@ sub content {
         isPortfolio => !($page->meta("category") eq "about" || $page->meta("category") eq "blog" || $page->meta("category") eq "error"),
         root => $page->meta("root"),
         youtube => $page->meta("youtube"),
-        header => ($page->meta("browser") || $page->meta("android") || $page->meta("embed") || $page->meta("video") || $page->meta("buttons") || $page->meta("art"))?1:0,
+        header => ($page->meta("browser") || $page->meta("android") || (!$page->meta("youtube") && ($page->meta("embed") || $page->meta("video"))) || $page->meta("buttons") || $page->meta("art"))?1:0,
         art => $page->meta("art"),
-        embed => $page->meta("embed"),
-        video => $page->meta("video"),
+        embed => $page->meta("youtube")?undef:$page->meta("embed"),
+        video => $page->meta("youtube")?undef:$page->meta("video"),
         buttons => $page->meta("buttons"),
         browser => $page->meta("browser"),
         android => $page->meta("android"),
@@ -86,7 +131,7 @@ sub dir {
         });
     }
 
-    return $category->render("themes/Pahgawks/template/dir.tmpl", {
+    return $self->render("themes/Pahgawks/template/dir.tmpl", {
         title => $category->info("name"),
         name => $category->info("name"),
         root => $category->info("root"),
@@ -102,85 +147,73 @@ sub archives {
     my $source = "";
 
     my @categories = sort { $a->info("rank") <=> $b->info("rank") } @cats;
+    my $filteredCats = [];
 
-    #$source .= $self->header("archives", "Archives", $root);
-    $source .= "<div class='section top' id='content'>
-    <div class='wrapper'>
-    <h1 class='cat'>Everything</h1>
-    <p>
-    <a href='" . $root . "/programming' class='cat'>Programming</a>
-    <a href='" . $root . "/film' class='cat'>Animation</a>
-    <a href='" . $root . "/music' class='cat'>Music</a>
-    <a href='" . $root . "/art' class='cat'>Art</a>
-    <a href='" . $root . "/blog' class='cat'>Blog</a>
-    <a href='" . $root . "/archives' class='cat'>Everything</a>
-    </p>
-    </div>
-    </div>";
-
-    my $section = 1;
+    my $catNum = 0;
     foreach my $category (@categories) {
-        $source .= "<div class='section archive" . ($section%2==0?"":" odd") . "' id='content'>
-        <div class='wrapper icons'>
-        <h2>" . $category->info("name") . "</h2>";
+        push (@$filteredCats, {
+            name => $category->info("name"),
+            dir => $category->info("dir"),
+            pages => []
+        });
+        $catNum++;
 
         my $pageNum = 0;
         foreach my $page (@{ $category->info("pages") }) {
-
-            $source .= "<div class='animation'><div class='icon' style='background-image:url(" . $page->meta("thumbnail") . ")'><a href=" . $page->meta("url") . "></a></div><div class='info'><a class='title' href='" . $page->meta("url") . "''>" . $page->meta("title") . "</a>";
-
-            if ($page->meta("awards")) {
-                $source .= "<div class='awards'>\n";
-                foreach my $award (@{ $page->meta("awards") }) {
-                    $source .= "<div class='" . $award->{award} . "' title='" . $award->{description} . "''></div>";
-                }
-                $source .= "</div>\n";
-            }
-
+            my $languages = "";
+            my $j = 0;
             if ($page->meta("languages")) {
-                $source .= "<div class='languages'>Made with ";
-                my $j = 0;
                 foreach my $language (@{ $page->meta("languages") }) {
-                    $source .= $language;
+                    $languages .= $language;
                     if (scalar @{ $page->meta("languages") } == 2 && $j == 0) {
-                        $source .= " and ";
+                        $languages .= " and ";
                     } elsif ($j == scalar @{ $page->meta("languages") }-2) {
-                        $source .= ", and ";
+                        $languages .= ", and ";
                     } elsif ($j<scalar @{ $page->meta("languages") }-1) {
-                        $source .= ", ";
+                        $languages .= ", ";
                     }
                     $j++;
                 }
-                $source .= "</div>";
             }
 
-            $source .= "<p>" . $page->meta("excerpt") . "</p>";
-            $source .= "<div class='date'>" . $page->meta("date")->{mday} . " " . $page->meta("date")->{fullmonth} . ", " . $page->meta("date")->{year} . "</div>
-            </div>
-            </div>";
+            push(@{ $filteredCats->[$catNum-1]->{"pages"} }, {
+                title => $page->meta("title"),
+                date => $page->template("date"),
+                awards => $page->template("awards"),
+                languages => $languages,
+                excerpt => $page->meta("excerpt"),
+                thumbnail => $page->meta("thumbnail"),
+                url => $page->meta("url")
+            });
 
             $pageNum++;
-            if ($pageNum >= 4) {
+            if ($pageNum==4) {
                 last;
             }
-        }
-        $source .= "<div class='centered large'>
-        <a href='" . $category->info("dir") . "' class='button'>View " . $category->info("name") . "</a>
-        </div>
-        </div></div>\n";
 
-        $section++;
+        }
     }
 
+    return @categories[0]->render("themes/Pahgawks/template/archives.tmpl", {
+        title => "Portfolio",
+        root => @categories[0]->info("root"),
+        isPortfolio => 1,
+        categories => $filteredCats
+    });
 
-    #$source .= $self->footer();
-
-
-    return $source;
 }
 
 sub error {
     my ($self, $error, $root) = @_;
+
+    return $self->render("themes/Pahgawks/template/error.tmpl", {
+        title => "Page Not Found",
+        isAbout => 0,
+        isBlog => 0,
+        isPortfolio => 0,
+        root => $root,
+        error => $error
+    });
 
     my $source = "";
 
@@ -212,14 +245,15 @@ sub error {
 
 sub main {
     my ($self, $page) = @_;
-    my $source = "";
 
-    #$source .= $self->header("about", $page->meta("title"), $page->meta("root"));
-
-    $source .= $page->content;
-
-    #$source .= $self->footer();
-    return $source;
+    return $self->render("themes/Pahgawks/template/content.tmpl", {
+        title => $page->meta("title"),
+        content => $page->content,
+        isAbout => 1,
+        isBlog => 0,
+        isPortfolio => 0,
+        root => $page->meta("root"),
+    });
 }
 
 1;
