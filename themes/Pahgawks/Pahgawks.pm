@@ -136,9 +136,9 @@ sub dir {
         name => $category->info("name"),
         root => $category->info("root"),
         years => $years,
-        isAbout => $category->info("name") eq "about",
-        isBlog => $category->info("name") eq "blog",
-        isPortfolio => !($category->info("name") eq "about" || $category->info("name") eq "blog" || $category->info("name") eq "error"),
+        isAbout => lc($category->info("name")) eq "about",
+        isBlog => lc($category->info("name")) eq "blog",
+        isPortfolio => !(lc($category->info("name")) eq "about" || lc($category->info("name")) eq "blog"),
     });
 }
 
