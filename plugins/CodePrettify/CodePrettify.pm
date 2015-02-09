@@ -1,7 +1,6 @@
 package CodePrettify;
 
 use lib "../..";
-use Page;
 
 sub new {
 	my $class = shift;

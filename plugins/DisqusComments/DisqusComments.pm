@@ -1,7 +1,6 @@
 package DisqusComments;
 
 use lib "../..";
-use Page;
 
 sub new {
 	my $class = shift;

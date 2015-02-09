@@ -1,4 +1,4 @@
-package Page;
+package Trestle::Page;
 
 use CGI;
 use JSON;

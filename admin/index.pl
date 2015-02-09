@@ -176,10 +176,18 @@ if ($loggedin) {
                 <input type='hidden' name='clear_cache' id='clear_cache' value='true' />
                 <input type='submit' value='Clear Cache' />
             </form>
+            <form method='post' id='restartServer'>
+                <input type='hidden' name='restart_server' id='restart_server' value='true' />
+                <input type='submit' value='Restart Trestle' />
+            </form>
         ";
         if ($query->param("clear_cache") && $query->param("clear_cache") eq "true") {
             rmtree("../cache");
             print "<p class='message'>Cache cleared successfully.</p>"
+        }
+        if ($query->param("restart_server") && $query->param("restart_server") eq "true") {
+            system("service apache2 restart");
+            print "<p class='message'>Server restarted successfully.</p>"
         }
         print "</div></div>";
 

@@ -1,7 +1,6 @@
 package GoogleAnalytics;
 
 use lib "../..";
-use Page;
 
 sub new {
 	my $class = shift;
