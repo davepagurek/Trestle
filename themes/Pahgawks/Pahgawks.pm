@@ -2,7 +2,6 @@ package Pahgawks;
 
 use strict;
 
-use lib "../..";
 use HTML::Template;
 
 sub new {

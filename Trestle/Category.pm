@@ -1,7 +1,6 @@
-package Category;
+package Trestle::Category;
 
 use CGI;
-use Page;
 use JSON;
 use strict;
 
