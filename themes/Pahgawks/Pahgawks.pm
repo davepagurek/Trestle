@@ -194,7 +194,7 @@ sub archives {
         }
     }
 
-    return @categories[0]->render("themes/Pahgawks/template/archives.tmpl", {
+    return $self->render("themes/Pahgawks/template/archives.tmpl", {
         title => "Portfolio",
         root => @categories[0]->info("root"),
         isPortfolio => 1,
