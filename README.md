@@ -45,10 +45,9 @@ my $site = Trestle->new({
 $site->run();
 ```
 
-<ul>
-    <li>If `dev` is enabled, `CGI::Carp` will send warnings and fatal errors to the browser</li>
-    <li>`cacheLife` is the number of hours before a cached page is set to be rerendered</li>
-</ul>
+If `dev` is enabled, `CGI::Carp` will send warnings and fatal errors to the browser.
+
+`cacheLife` is the number of hours before a cached page is set to be rerendered.
 
 <h3>Apache config</h3>
 In `.htaccess`, uncomment the respective line based on your system setup:
@@ -80,12 +79,13 @@ The boat part is actually for real though.
 
 ```
 
-<ul>
-    <li>Metadata is written as a JSON object in an HTML comment at the top of the page</li>
-    <li>`%root%` will be replaced by the root directory as defined in `index.fcgi`</li>
-    <li>Inline YouTube video urls will be replaced with an embedded player thanks to `Trestle::Plugin::YouTube`</li>
-    <li>Images in the form `<img src="img" full="img-full" caption="Caption">` will be replaced by a captioned image thanks to `Trestle::Plugin::YouTube`</li>
-</ul>
+Metadata is written as a JSON object in an HTML comment at the top of the page.
+
+`%root%` will be replaced by the root directory as defined in `index.fcgi`
+
+Inline YouTube video urls will be replaced with an embedded player thanks to `Trestle::Plugin::YouTube`
+
+Images in the form `<img src="img" full="img-full" caption="Caption">` will be replaced by a captioned image thanks to `Trestle::Plugin::YouTube`
 
 <h2>Plugins</h2>
 Here is the structure of an example plugin:
@@ -118,6 +118,7 @@ sub content {
 ```
 
 Set `$self->{pagetype}` in `sub new` to register the plugin for that type of content.
+
 In the `content` sub, you can do what you want with the `$content` variable and then return the new page content.
 
 <h2>Themes</h2>
