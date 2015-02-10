@@ -1,6 +1,4 @@
-package DisqusComments;
-
-use lib "../..";
+package Trestle::Plugin::DisqusComments;
 
 sub new {
 	my $class = shift;

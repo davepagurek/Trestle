@@ -1,6 +1,4 @@
-package GoogleAnalytics;
-
-use lib "../..";
+package Trestle::Plugin::GoogleAnalytics;
 
 sub new {
 	my $class = shift;

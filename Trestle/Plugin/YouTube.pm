@@ -1,6 +1,4 @@
-package YouTube;
-
-use lib "../..";
+package Trestle::Plugin::YouTube;
 
 sub new {
 	my $class = shift;
