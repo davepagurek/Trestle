@@ -1,4 +1,4 @@
-#!C:/Perl/bin/perl
+#!/usr/bin/perl
 
 use CGI::Session;
 use CGI;
