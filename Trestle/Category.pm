@@ -4,6 +4,9 @@ use CGI;
 use JSON;
 use strict;
 
+use lib "../";
+use Trestle::Page;
+
 sub new {
     my $self = { };
 
@@ -22,7 +25,7 @@ sub new {
     my @pages = ();
     foreach my $pageFile (glob("$sourceDir/*.html")) {
         $pageFile =~ s/\/+/\//g;
-        push(@pages, Page->new($pageFile, $self->{root}, 1));
+        push(@pages, Trestle::Page->new($pageFile, $self->{root}, 1));
     }
 
     #Sort the pages in reverse chronological order by release date
