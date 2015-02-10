@@ -580,6 +580,18 @@ img.art {
     overflow-x:auto;    
 }
 
+span.code {
+    font-family: monospace;
+    unicode-bidi: embed;
+    white-space: pre;
+    background-color: rgba(0,0,0,0.1);
+    border-radius:4px;
+    -webkit-border-radius:4px;
+    font-size:0.85em;
+    padding:0.2em;
+    vertical-align:bottom;
+}
+
 /* Responsive */
 @media all and (max-width: 1300px) {
     .wrapper {

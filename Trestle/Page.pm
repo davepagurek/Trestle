@@ -78,8 +78,8 @@ sub new {
                 next;
             }
 
-            #ignore blank lines
-            if (!$line) {
+            #ignore blank lines if not code
+            if (!$line && !$isCode) {
                 next;
 
                 #If we're in meta mode
@@ -139,12 +139,16 @@ sub new {
                         $content .= $cgi->escapeHTML($line) . "\n";
                     }
 
-                    #If paragraphing is off or it's in a heading or p tag, don't wrap in a p tag
+                #If paragraphing is off or it's in a heading or p tag, don't wrap in a p tag
                 } elsif (($self->{paragraph} && $self->{paragraph} eq "false") || $line =~ /(?:^<(?:h(?:[0-9]+)|ul|li|table|th|tr|td|p).*>)|(?:<\/(?:h(?:[0-9]+)|ul|li|table|th|tr|td|p)>$)/i) {
                     $line =~ s/\%root\%/$root/g;
                     $content .= $line . "\n";
 
-                    #otherwise, wrap in a p tag
+                } elsif ($line =~ /(.*`)(.*)(`.*)/) {
+                    $line =~ s/(.*?`)(.*?)(`.*?)/$1 . $cgi->escapeHTML($2) . $3/eig;
+                    $content .= "<p>$line</p>\n";
+
+                #otherwise, wrap in a p tag
                 } else {
                     $line =~ s/\%root\%/$root/g;
                     $content .= "<p>" . $line . "</p>\n";
