@@ -1,6 +1,4 @@
-package CodePrettify;
-
-use lib "../..";
+package Trestle::Plugin::CodePrettify;
 
 sub new {
 	my $class = shift;

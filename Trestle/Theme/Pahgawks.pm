@@ -1,4 +1,4 @@
-package Pahgawks;
+package Trestle::Theme::Pahgawks;
 
 use strict;
 
@@ -7,7 +7,7 @@ use HTML::Template;
 sub new {
     my $class = shift;
     my $self = {
-        dir => "themes/Pahgawks"
+        dir => "Trestle/Theme/Pahgawks"
     };
 
     bless $self, $class;
@@ -63,7 +63,8 @@ sub render {
 sub content {
     my ($self, $page) = @_;
 
-    return $self->render("themes/Pahgawks/template/content.tmpl", {
+    return $self->render("$self->{dir}/template/content.tmpl", {
+        themeDir => $self->{dir},
         title => $page->meta("title"),
         category => $page->meta("category"),
         content => $page->content,
@@ -130,7 +131,8 @@ sub dir {
         });
     }
 
-    return $self->render("themes/Pahgawks/template/dir.tmpl", {
+    return $self->render("$self->{dir}/template/dir.tmpl", {
+        themeDir => $self->{dir},
         title => $category->info("name"),
         name => $category->info("name"),
         root => $category->info("root"),
@@ -193,7 +195,8 @@ sub archives {
         }
     }
 
-    return $self->render("themes/Pahgawks/template/archives.tmpl", {
+    return $self->render("$self->{dir}/template/archives.tmpl", {
+        themeDir => $self->{dir},
         title => "Portfolio",
         root => @categories[0]->info("root"),
         isPortfolio => 1,
@@ -205,7 +208,8 @@ sub archives {
 sub error {
     my ($self, $error, $root) = @_;
 
-    return $self->render("themes/Pahgawks/template/error.tmpl", {
+    return $self->render("$self->{dir}/template/error.tmpl", {
+        themeDir => $self->{dir},
         title => "Page Not Found",
         isAbout => 0,
         isBlog => 0,
@@ -213,39 +217,13 @@ sub error {
         root => $root,
         error => $error
     });
-
-    my $source = "";
-
-    #$source .= $self->header("error", "Page Not Found", $root);
-
-    $source .= "<div class='section'>
-    <div class='wrapper'>
-    <h1>Page Not Found</h1>
-    <img class='aligncenter' src='$root/content/images/2014/12/404.jpg' />
-    <p>Sadly, the page you were looking for is not actually here. If you think a link on the site is broken or something, <a href='mailto:dave\@davepagurek.com'>send me an email</a> and I'll try to fix it. Otherwise, you can probably find what you were looking for somewhere in one of these categories:</p>
-
-    <p>
-    <a href='" . $root . "/programming' class='cat'>Programming</a>
-    <a href='" . $root . "/film' class='cat'>Animation</a>
-    <a href='" . $root . "/music' class='cat'>Music</a>
-    <a href='" . $root . "/art' class='cat'>Art</a>
-    <a href='" . $root . "/blog' class='cat'>Blog</a>
-    <a href='" . $root . "/archives' class='cat'>Everything</a>
-    </p>
-    </div>
-    </div>
-
-    </div>";
-
-    #$source .= $self->footer();
-
-    return $source;
 }
 
 sub main {
     my ($self, $page) = @_;
 
-    return $self->render("themes/Pahgawks/template/content.tmpl", {
+    return $self->render("$self->{dir}/template/content.tmpl", {
+        themeDir => $self->{dir},
         title => $page->meta("title"),
         content => $page->content,
         isAbout => 1,
