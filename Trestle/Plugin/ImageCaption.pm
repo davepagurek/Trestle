@@ -18,7 +18,7 @@ sub content {
 	#Replace image captions with actual HTML.
     #Image captions should be in the form:
     #   <img src="img" full="img-full" caption="Caption">
-    $content =~ s/(?:<p>)*<img *src *= *"(.*)" *full *= *"(.*)" *caption *= *"(.*)" *\/*>(?:<\/p>)*/"<div class='img'><a href='$2'><img src='$1' \/><\/a> <p class='caption'>" . String::Unescape->unescape($3) . "<\/p><\/div>"/eig;
+    $content =~ s/(?!(?:<span class="code">.*?)|`)<img *src *= *"(.*?)" *full *= *"(.*?)" *caption *= *"(.*?)" *\/*>(?!(?:.*?<\/span>)|`)/"<div class='img'><a href='$2'><img src='$1' \/><\/a> <p class='caption'>" . String::Unescape->unescape($3) . "<\/p><\/div>"/eig;
 
 	return $content;
 }
