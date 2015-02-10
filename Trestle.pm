@@ -190,6 +190,5 @@ sub run {
     }
 }
 
-#my %config = do 'config.pl';
 
 1;
