@@ -1,5 +1,6 @@
 <h1>Trestle</h1>
 ![Trestle logo](https://github.com/pahgawk/Trestle/blob/master/admin/img/trestle.png?raw=true)
+
 A light, extensible Perl CMS by Dave Pagurek
 
 <h2>Screenshots</h2>
@@ -85,3 +86,118 @@ The boat part is actually for real though.
     <li>Inline YouTube video urls will be replaced with an embedded player thanks to `Trestle::Plugin::YouTube`</li>
     <li>Images in the form `<img src="img" full="img-full" caption="Caption">` will be replaced by a captioned image thanks to `Trestle::Plugin::YouTube`</li>
 </ul>
+
+<h2>Plugins</h2>
+Here is the structure of an example plugin:
+```perl
+package Trestle::Plugin::Example;
+
+sub new {
+	my $class = shift;
+	my $self = {};
+
+	$self->{pages} = 1;
+	$self->{categories} = 1;
+	$self->{archives} = 1;
+	$self->{index} = 1;
+	$self->{error} = 1;
+
+	bless $self, $class;
+	return $self;
+}
+
+sub content {
+	my ($self, $content, $page) = @_;
+
+    $content =~ s/foo/bar/ig;
+
+	return $content;
+}
+
+1;
+```
+
+Set `$self->{pagetype}` in `sub new` to register the plugin for that type of content.
+In the `content` sub, you can do what you want with the `$content` variable and then return the new page content.
+
+<h2>Themes</h2>
+Here is the basic structure of a theme:
+```perl
+package Trestle::Theme::Example;
+
+use strict;
+
+use lib "../..";
+use Trestle::Theme;
+
+sub new {
+    my $class = shift;
+    my $self = {
+        dir => "Trestle/Theme/Example",
+        theme => Trestle::Theme->new()
+    };
+
+    bless $self, $class;
+    return $self;
+}
+
+sub content {
+    my ($self, $page) = @_;
+
+    return $self->{theme}->render("$self->{dir}/template/content.tmpl", {
+        themeDir => $self->{dir},
+        title => $page->meta("title"),
+        category => $page->meta("category"),
+        content => $page->content
+    });
+}
+
+sub dir {
+    my ($self, $category) = @_;
+
+    return $self->{theme}->render("$self->{dir}/template/dir.tmpl", {
+        themeDir => $self->{dir},
+        title => $category->info("name"),
+        name => $category->info("name"),
+        pages => $category->info("pages")
+    });
+}
+
+sub archives {
+    my ($self, $root, @cats) = @_;
+    my $source = "";
+
+    return $self->{theme}->render("$self->{dir}/template/archives.tmpl", {
+        themeDir => $self->{dir},
+        title => "Portfolio",
+        categories => \@cats
+    });
+
+}
+
+sub error {
+    my ($self, $error, $root) = @_;
+
+    return $self->{theme}->render("$self->{dir}/template/error.tmpl", {
+        themeDir => $self->{dir},
+        title => "Page Not Found",
+        error => $error
+    });
+}
+
+sub main {
+    my ($self, $page) = @_;
+
+    return $self->{theme}->render("$self->{dir}/template/content.tmpl", {
+        themeDir => $self->{dir},
+        title => $page->meta("title"),
+        content => $page->content
+    });
+}
+
+1;
+```
+
+A theme uses `HTML::Template`-style templates for pages, documentation for which can be found here: search.cpan.org/~samtregar/HTML-Template-2.6/Template.pm
+
+Themes have subs for each of the types of pages that potentially need to be rendered.
