@@ -1,4 +1,4 @@
-#!C:/Perl/bin/perl.exe
+#!/usr/bin/perl
 
 use Trestle;
 use lib "themes/Pahgawks";
