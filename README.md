@@ -198,6 +198,6 @@ sub main {
 1;
 ```
 
-A theme uses `HTML::Template`-style templates for pages, documentation for which can be found here: search.cpan.org/~samtregar/HTML-Template-2.6/Template.pm
+A theme uses `HTML::Template`-style templates for `.tmpl` pages. Read <a href="search.cpan.org/~samtregar/HTML-Template-2.6/Template.pm">the documentation</a> to see how to write templates.
 
 Themes have subs for each of the types of pages that potentially need to be rendered.
