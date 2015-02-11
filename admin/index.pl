@@ -188,7 +188,7 @@ if ($loggedin) {
         if ($query->param("restart_server") && $query->param("restart_server") eq "true") {
             open (my $rebuild, ">", "../rebuild") or die "Could not open rebuild: $!";
             print $rebuild "1";
-            close($rebuild)
+            close($rebuild);
             print "<p class='message'>Server restarted successfully.</p>"
         }
         print "</div></div>";

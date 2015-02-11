@@ -26,7 +26,7 @@ sub run {
         CGI::Carp->import(qw(warningsToBrowser fatalsToBrowser)) if CGI::Carp -> can ("import");
     }
 
-    while (my $q = CGI::Fast->new && !(-e "rebuild")) {
+    while (my $q = CGI::Fast->new) {
 
 
         my $query = CGI->new();
@@ -186,6 +186,10 @@ sub run {
                 print $cached $content;
                 close $cached or die "can't close '$cached': $!";
             }
+        }
+        if (-e "rebuild") {
+            unlink "rebuild" or die "Unable to unlink rebuild: $!";
+            last;
         }
     }
 }
