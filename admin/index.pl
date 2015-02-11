@@ -186,7 +186,9 @@ if ($loggedin) {
             print "<p class='message'>Cache cleared successfully.</p>"
         }
         if ($query->param("restart_server") && $query->param("restart_server") eq "true") {
-            system("service apache2 restart");
+            open (my $rebuild, ">", "../rebuild") or die "Could not open rebuild: $!";
+            print $rebuild "1";
+            close($rebuild)
             print "<p class='message'>Server restarted successfully.</p>"
         }
         print "</div></div>";
