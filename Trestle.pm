@@ -26,7 +26,7 @@ sub run {
         CGI::Carp->import(qw(warningsToBrowser fatalsToBrowser)) if CGI::Carp -> can ("import");
     }
 
-    while (my $q = CGI::Fast->new) {
+    while (my $q = CGI::Fast->new && !(-e "rebuild")) {
 
 
         my $query = CGI->new();
