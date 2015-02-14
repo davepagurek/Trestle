@@ -39,6 +39,7 @@ sub preprocess {
 my %credentials = do 'credentials.pl';
 
 my $query = CGI->new();
+my $root = do 'root.pl';
 
 
 my $session = new CGI::Session("driver:File", $query, {Directory=>'/tmp'});
@@ -71,6 +72,13 @@ if ($loggedIn) {
 
     if ($query->url_param("edit") && -e "../content/" . $query->url_param("edit")) {
 
+        my $url = $query->url_param("edit");
+        if ($url eq "index.html") {
+            $url = "";
+        } else {
+            $url =~ s/(.+\/)?(.+)\.html/\/$1$2/;
+        }
+
         my $source = "../content/" . $query->url_param("edit");
         if ($query->param("content")) {
             open my $content, ">", $source or die "Can't open $source: $!";
@@ -97,7 +105,9 @@ if ($loggedIn) {
             loggedIn => $loggedIn,
             editor => 1,
             message => $message,
-            source => $pageContent
+            source => $pageContent,
+            root => $root,
+            url => $url
         });
         print $template->output;
 
