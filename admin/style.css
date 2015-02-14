@@ -92,28 +92,37 @@ form#login .line {
     margin-bottom:10px;
 }
 
-input[type="button"], input[type="submit"] {
-    display:inline-block;
-    border:0;
-    border-radius:5px;
-    background-color: #069;
-    color:#FFF;
-    padding:15px;
-    margin:15px;
-    cursor:pointer;
-    transition:all ease 0.3s;
-}
-
-input[type="button"]:hover, input[type="submit"]:hover {
-    background-color:#28B;
-}
-
 a, a:visited {
     color:#28B;
 }
 
 a:hover {
     color:#4AD;
+}
+
+input[type="button"], input[type="submit"], a.button {
+    text-decoration:none;
+    font-size:14px;
+    display:inline-block;
+    border:0;
+    border-radius:5px;
+    background-color: #069;
+    color:#FFF;
+    padding:15px;
+    margin:15px 0 15px 15px;
+    cursor:pointer;
+    transition:all ease 0.3s;
+}
+
+input[type="button"]:hover, input[type="submit"]:hover, a.button:hover {
+    background-color:#28B;
+}
+
+a.button.secondary {
+    background-color:#666;
+}
+a.button.secondary:hover {
+    background-color:#888;
 }
 
 /* Logged in */
