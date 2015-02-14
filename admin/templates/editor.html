@@ -1,0 +1,14 @@
+<TMPL_INCLUDE NAME="header.html">
+    <div class='full'>
+        <TMPL_IF NAME="message">
+        <p class="message"><TMPL_VAR NAME="message"></p>
+        </TMPL_IF>
+
+        <form id='editor' method='post'>
+            <textarea id='content' name='content'><TMPL_VAR NAME="source"></textarea>
+            <input type='checkbox' id='spellcheck' name='spellcheck' checked> <label for='spellcheck'>Spellcheck</label>
+            <input type='submit' value='save' />
+        </form>
+        <iframe id='media' frameborder='0' src='uploader.pl'></iframe>
+    </div>
+<TMPL_INCLUDE NAME="footer.html">

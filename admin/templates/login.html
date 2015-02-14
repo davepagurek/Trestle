@@ -1,0 +1,20 @@
+<TMPL_INCLUDE NAME="header.html">
+    <h1>Trestle Login</h1>
+
+    <TMPL_IF NAME="message">
+    <p class='message'><TMPL_VAR NAME="message"></p>
+    </TMPL_IF>
+
+    <form method='post' id='login'>
+        <div class='line'>
+            <label for='username'>Username</label>
+            <input type='text' name='username' id='username' />
+        </div>
+        <div class='line'>
+            <label for='password'>Password</label>
+            <input type='password' name='password' id='password' />
+        </div>
+
+        <input type='submit' value='Log In' />
+    </form>
+<TMPL_INCLUDE NAME="footer.html">
