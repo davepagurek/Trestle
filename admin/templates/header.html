@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+    <head>
+    <title>Admin - <TMPL_VAR NAME="title"></title>
+        <link rel='stylesheet' type='text/css' href='style.css' />
+        <link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,400,300,700' rel='stylesheet' type='text/css'>
+
+        <TMPL_IF NAME="editor">
+        <script type='text/javascript' src='editor.js'></script>
+        </TMPL_IF>
+
+        <TMPL_IF NAME="dashboard">
+        <script type='text/javascript' src='dashboard.js'></script>
+        </TMPL_IF>
+    </head>
+    <body>
+        <div id='header'>
+            <h1><a href='index.pl'>Trestle Admin</a></h1>
+
+            <TMPL_IF NAME="loggedIn">
+            <form method='post' id='logout'>
+                <input type='hidden' name='log_out' id='log_out' value='true' />
+                <input type='submit' value='Log Out' />
+            </form>
+            </TMPL_IF>
+        </div>
+        <div class='container'>
