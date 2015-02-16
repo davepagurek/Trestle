@@ -746,14 +746,18 @@ span.code {
         border:0;
         height:0;
         overflow:hidden;
-        -webkit-transition: height 0.2s ease-out;
-        -moz-transition: height 0.2s ease-out;
-        -ms-transition: height 0.2s ease-out;
-        -o-transition: height 0.2s ease-out;
-        transition: height 0.2s ease-out;
+        position:absolute;
+        z-index: 3;
+        background-color:#FFF;
+        -webkit-transition: all 0.2s cubic-bezier(0,1.5,0.5,1);
+	    -moz-transition: all 0.2s cubic-bezier(0,1.5,0.5,1);
+	    -ms-transition: all 0.2s cubic-bezier(0,1.5,0.5,1);
+	    -o-transition: all 0.2s cubic-bezier(0,1.5,0.5,1);
+	    transition: all 0.2s cubic-bezier(0,1.5,0.5,1);
     }
     #menu.open .wrapper {
-        height:130px;
+        height:120px;
+        border-bottom:4px solid #DDD;
     }
     #menuLabel {
         display:block !important;
