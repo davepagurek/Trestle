@@ -9,6 +9,7 @@ use File::Path qw(rmtree);
 use HTML::Entities;
 use HTML::Template;
 use Encode;
+use Git::Wrapper;
 use strict;
 
 
@@ -122,6 +123,26 @@ if ($loggedIn) {
             print $rebuild "1";
             close($rebuild);
             $message = "Server set to restart on next request.";
+        }
+        if ($query->param("commit_changes") && $query->param("commit_changes") eq "true" && $query->param("commit_message")) {
+            my $git = Git::Wrapper->new('../content');
+            $git->add({ all => 1 });
+            $git->config("user.name \"" . $credentials{gitname} . "\"");
+            $git->config("user.email \"" . $credentials{gitemail} . "\"");
+            $git->commit({
+                message => $query->param("commit_message"),
+                all => 1
+            });
+            $message = "Commit successful.";
+        }
+        if ($query->param("sync_changes") && $query->param("sync_changes") eq "true") {
+            my $git = Git::Wrapper->new('../content');
+            $git->pull();
+            my @changes = $git->status->get("indexed");
+            if (scalar @changes > 0) {
+                $git->push();
+            }
+            $message = "Sync complete.";
         }
 
         #Make file list
