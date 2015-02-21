@@ -127,8 +127,12 @@ if ($loggedIn) {
         if ($query->param("commit_changes") && $query->param("commit_changes") eq "true" && $query->param("commit_message")) {
             my $git = Git::Wrapper->new('../content');
             $git->add({ all => 1 });
-            $git->config("user.name \"" . $credentials{gitname} . "\"");
-            $git->config("user.email \"" . $credentials{gitemail} . "\"");
+
+            chdir('../content');
+            qx(git config user.name "$credentials{gitname}");
+            qx(git config user.email "$credentials{gitemail}");
+            chdir('../admin');
+
             $git->commit({
                 message => $query->param("commit_message"),
                 all => 1
@@ -138,11 +142,21 @@ if ($loggedIn) {
         if ($query->param("sync_changes") && $query->param("sync_changes") eq "true") {
             my $git = Git::Wrapper->new('../content');
             $git->pull();
-            my @changes = $git->status->get("indexed");
-            if (scalar @changes > 0) {
-                $git->push();
+            #my @changes = $git->status->get("indexed");
+            #if (scalar @changes > 0) {
+            my $remote = ($git->config("remote.origin.url") )[0];
+            $remote =~ s/https:\/\//https:\/\/$credentials{gitusername}:$credentials{gitpassword}\@/;
+
+            chdir('../content');
+            my $out =  qx(git push $remote master 2>&1);
+            my $rc = $?;
+            chdir('../admin');
+
+            if ($rc == 0) {
+                $message = "Sync complete.";
+            } else {
+                $message = "Sync error: $out";
             }
-            $message = "Sync complete.";
         }
 
         #Make file list
