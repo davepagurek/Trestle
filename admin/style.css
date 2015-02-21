@@ -18,6 +18,10 @@ h2 {
     font-weight:lighter;
 }
 
+h3 {
+    font-weight:lighter;
+}
+
 form {
     display:inline-block;
 }
@@ -27,8 +31,15 @@ form {
     width:50%;
     clear:left;
 }
+.section.third {
+    width:33%;
+}
+.section.twothirds {
+    width:66%;
+}
 .section + .section {
     clear:none;
+    border-right:0;
 }
 
 @media all and (max-width:900px) {
