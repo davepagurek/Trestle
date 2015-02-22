@@ -588,7 +588,7 @@ span.code {
     -webkit-border-radius:4px;
     font-size:0.85em;
     padding:0.2em;
-    vertical-align:bottom;
+    vertical-align:middle;
     word-wrap: normal;
 }
 
