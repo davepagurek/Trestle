@@ -3,6 +3,9 @@ body {
     padding:0;
     font-family: 'Open Sans', sans-serif;
 }
+*::selection {
+    background:#E67E7E;
+}
 h1 {
     font-size:70px;
     font-family: 'Bitter', serif;
@@ -29,6 +32,10 @@ p {
     font-size: 20px;
     line-height:30px;
     margin-bottom: 30px;
+}
+li {
+	font-size: 20px;
+	line-height:30px;
 }
 a {
     color:#c0392b;
@@ -634,6 +641,10 @@ span.code {
         font-size: 18px;
         line-height:25px;
         margin-bottom:25px;
+    }
+    li {
+    	font-size: 18px;
+        line-height:25px;
     }
     #header h2 {
         font-size:25px;
