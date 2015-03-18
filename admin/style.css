@@ -26,6 +26,10 @@ form {
     display:inline-block;
 }
 
+.uploader form {
+    display:block;
+}
+
 .section {
     float:left;
     width:50%;

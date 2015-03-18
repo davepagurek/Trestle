@@ -1,11 +1,20 @@
 <TMPL_INCLUDE NAME="header.html">
     <div class='section'>
         <div class='wrapper'>
+            <h2>New Page</h2>
+            <form method='post' id='newPage'>
+                <input type="text" placeholder="Category" value="" name="category" id="page_category" /><br/>
+                <input type="text" placeholder="Page name" value="" name="new" id="new_page" />
+                <button type='submit'>
+                    <i class="fa fa-plus"></i> Create
+                </button>
+            </form>
+
             <h2>Edit Page</h2>
             <ul class='dirlist'>
                 <TMPL_LOOP NAME="files">
                 <TMPL_IF NAME="dirName">
-                
+
                 <li class="dir closed"><span><TMPL_VAR NAME="dirName"></span>
                     <ul>
                         <TMPL_LOOP NAME="dirFiles">

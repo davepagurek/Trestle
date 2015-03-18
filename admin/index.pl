@@ -10,6 +10,7 @@ use HTML::Entities;
 use HTML::Template;
 use Encode;
 use Git::Wrapper;
+use Date::Simple qw(date today);
 use strict;
 
 
@@ -63,7 +64,32 @@ if ($query->param("log_out")) {
     $message = "Incorrect login.";
 }
 
-print $query->header("text/html") unless $query->{".header_printed"};
+if ($loggedIn && $query->param("new")) {
+    my $category = lc($query->param("category"));
+
+    my $title = $query->param("new");
+
+    my $slug = lc($title);
+    $slug =~ s/[^\w ]+//g;
+    $slug =~ s/\s+/-/g;
+
+    my $date = today();
+
+    my $source = "../content/$category/$slug.html";
+    open my $content, ">", $source or die "Can't open $source: $!";
+    print $content
+"<!--
+    \"title\": \"$title\",
+    \"category\": \"$category\",
+    \"date\": \"$date\"
+-->
+";
+    close $content;
+
+    print $query->redirect("$root/admin/?edit=$category/$slug.html");
+} else {
+    print $query->header("text/html") unless $query->{".header_printed"};
+}
 
 
 if ($loggedIn) {
