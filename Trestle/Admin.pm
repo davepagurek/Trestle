@@ -226,7 +226,7 @@ sub run {
                     {
                         size => $_
                     }
-                } keys @{ $self->{config}->{sizes} };
+                } keys $self->{config}->{sizes};
 
                 while (my $file = readdir(DIR)) {
                     next if ($file =~ /^\./); #ignore hidden files
@@ -258,7 +258,6 @@ sub run {
                     die_on_bad_params =>  0
                 );
                 $template->param({
-                    root => $root,
                     parent => $parent,
                     hasParent => $hasParent,
                     dirs => $dirs,

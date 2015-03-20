@@ -14,7 +14,7 @@ my $admin = Trestle::Admin->new({
     gitusername => "johndoe",
     gitpassword => "test",
     key => "test346374725762572457F",
-    sizes => [
+    sizes => {
         "thumbnail" => {
             "width" => 220,
             "height" => 220,
@@ -33,7 +33,7 @@ my $admin = Trestle::Admin->new({
             "crop" => 0,
             "quality" => 98
         }
-    ]
+    }
 });
 
 $admin->run();

@@ -29,10 +29,10 @@
                 <div class='file'>
                     <img src='../content/images<TMPL_VAR NAME="dir">/<TMPL_VAR NAME="name">-thumbnail.jpg' />
                     <ul>
-                        <li><input type='text' value='<TMPL_VAR NAME="root">/content/images<TMPL_VAR NAME="dir">/<TMPL_VAR NAME="file">' /></li>
+                        <li><input type='text' value='%root%/content/images<TMPL_VAR NAME="dir">/<TMPL_VAR NAME="file">' /></li>
 
                         <TMPL_LOOP NAME="sizes">
-                        <li><input type='text' value='<TMPL_VAR NAME="root">/content/images<TMPL_VAR NAME="dir">/<TMPL_VAR NAME="name">-<TMPL_VAR NAME="size">.jpg' /></li>
+                        <li><input type='text' value='%root%/content/images<TMPL_VAR NAME="dir">/<TMPL_VAR NAME="name">-<TMPL_VAR NAME="size">.jpg' /></li>
                         </TMPL_LOOP>
                     </ul>
                 </div>
