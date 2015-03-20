@@ -1,0 +1,44 @@
+<html>
+    <head>
+        <title>Trestle Media Uploader</title>
+        <meta name='viewport' content='width=device-width, initial-scale=1' />
+        <link rel='stylesheet' type='text/css' href='style.css' />
+        <script type='text/javascript' src='uploader.js'></script>
+    </head>
+    <body>
+        <div class='uploader'>
+            <form method='post' enctype='multipart/form-data'>
+                <input type='file' name='file' />
+                <input type='submit' value='Upload' />
+            </form>
+
+            <div class='files'>
+                <TMPL_IF NAME="hasParent">
+                <div class='file'>
+                    <a href='?uploader=true&dir=<TMPL_VAR NAME="dir">'>/..</a>
+                </div>
+                </TMPL_IF>
+
+                <TMPL_LOOP NAME="dirs">
+                <div class='file'>
+                    <a href='?uploader=true&dir=<TMPL_VAR NAME="dir">/<TMPL_VAR NAME="file">'><TMPL_VAR NAME="dir">/<TMPL_VAR NAME="file"></a>
+                </div>
+                </TMPL_LOOP>
+
+                <TMPL_LOOP NAME="files">
+                <div class='file'>
+                    <img src='../content/images<TMPL_VAR NAME="dir">/<TMPL_VAR NAME="name">-thumbnail.jpg' />
+                    <ul>
+                        <li><input type='text' value='<TMPL_VAR NAME="root">/content/images<TMPL_VAR NAME="dir">/<TMPL_VAR NAME="file">' /></li>
+
+                        <TMPL_LOOP NAME="sizes">
+                        <li><input type='text' value='<TMPL_VAR NAME="root">/content/images<TMPL_VAR NAME="dir">/<TMPL_VAR NAME="name">-<TMPL_VAR NAME="size">.jpg' /></li>
+                        </TMPL_LOOP>
+                    </ul>
+                </div>
+                </TMPL_LOOP>
+            </div>
+
+    </div>
+    </body>
+    </html>
