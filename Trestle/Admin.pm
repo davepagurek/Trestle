@@ -28,6 +28,77 @@ sub new {
     return $self;
 }
 
+sub resize {
+    my $self = shift;
+    my $file = shift;
+    my $imgDir = shift;
+    if ($file && -e $file) {
+        my $name = "img";
+        my $mime = "jpg";
+        if ($file =~ /[\/\\]*([a-zA-Z0-9-_ ]*)\.([a-z]+)$/i) {
+            $name = $1;
+            $mime = $2;
+        }
+
+        #my $image = Image::Resize->new($file);
+        my $img;
+
+        if (lc($mime) eq "jpg" || lc($mime) eq "jpeg") {
+            $img = GD::Image->newFromJpeg($file);
+        } elsif (lc($mime) eq "png") {
+            $img = GD::Image->newFromPng($file);
+        }
+
+        my ($w,$h) = $img->getBounds(); # find dimensions
+
+        for my $size (keys @{ $self->{config}->{sizes} }) {
+            if ($w < $self->{config}->{sizes}->{$size}->{width} && $h < $self->{config}->{sizes}->{$size}->{height}) {
+                next;
+            }
+            if ($self->{config}->{sizes}->{$size}->{crop}) {
+                my ($cut,$xcut,$ycut);
+                if ($w>$h){
+                    $cut=$h;
+                    $xcut=(($w-$h)/2);
+                    $ycut=0;
+                } else {
+                    $cut=$w;
+                    $xcut=0;
+                    $ycut=(($h-$w)/2);
+                }
+                my $newimg = new GD::Image($self->{config}->{sizes}->{$size}->{width}, $self->{config}->{sizes}->{$size}->{height}, 1);
+                $newimg->copyResampled($img,0,0,$xcut,$ycut,$self->{config}->{sizes}->{$size}->{width}, $self->{config}->{sizes}->{$size}->{height},$cut,$cut);
+
+                #open(FILE, "> $out") || die;
+                #print FILE $newimg->jpeg;
+
+                open(my $thumbFile, ">", "$imgDir/$name-$size.jpg");
+                binmode $thumbFile;
+                print $thumbFile $newimg->jpeg($self->{config}->{sizes}->{$size}->{quality});
+                close $thumbFile;
+            } else {
+                my $gd;
+                if ($w>$h) {
+                    $gd = new GD::Image($self->{config}->{sizes}->{$size}->{width}, (($h/$w)*$self->{config}->{sizes}->{$size}->{width}), 1);
+                    $gd->copyResampled($img,0,0,0,0,$self->{config}->{sizes}->{$size}->{width}, (($h/$w)*$self->{config}->{sizes}->{$size}->{width}),$w,$h);
+                } else {
+                    $gd = new GD::Image(($w/$h)*$self->{config}->{sizes}->{$size}->{height}, ($self->{config}->{sizes}->{$size}->{height}), 1);
+                    $gd->copyResampled($img,0,0,0,0,($w/$h)*$self->{config}->{sizes}->{$size}->{height}, ($self->{config}->{sizes}->{$size}->{height}),$w,$h);
+
+                }
+
+                #my $gd = $image->resize($self->{config}->{sizes}->{$size}->{width}, $self->{config}->{sizes}->{$size}->{height});
+                open(my $thumbFile, ">", "$imgDir/$name-$size.jpg");
+                binmode $thumbFile;
+                print $thumbFile $gd->jpeg($self->{config}->{sizes}->{$size}->{quality});
+                close($thumbFile);
+            }
+        }
+    } else {
+        print "Can't find file $file\n";
+    }
+}
+
 
 sub run {
     my $self = shift;
@@ -94,7 +165,108 @@ sub run {
             #extend expiration
             $session->expire('+2h');
 
-            if ($query->url_param("edit") && -e "../content/" . $query->url_param("edit")) {
+            if ($query->url_param("uploader")) {
+
+                my $dir = "";
+                if ($query->url_param("dir") && -e "../content/images/" . $query->url_param("dir") && !($query->url_param("dir") =~ /^[\/\\]*\./)) {
+                    $dir = $query->url_param("dir");
+                }
+
+                my $file = $query->param('file');
+                my $filehandle = $query->upload("file");
+                if ($file && $filehandle) {
+                    my $basename = $file;
+                    $basename =~ s/.*[\/\\](.*)/$1/;
+
+                    my ($sec,$min,$hour,$mday,$mon,$year,$wday,$yday,$isdst) = localtime();
+                    $year = $year+1900;
+                    $mon += 1;
+
+                    my $imgDir = "../content/images/$year/$mon";
+                    if (!-d "../content/images/$year") {
+                        mkdir "../content/images/$year" or die "Unable to create ../content/images/$year: $!";
+                    }
+                    if (!-d $imgDir) {
+                        mkdir $imgDir or die "Unable to create $imgDir: $!";
+                    }
+
+                    binmode($filehandle);
+                    open (my $OUTFILE,'>',"$imgDir/$basename");
+                    binmode($OUTFILE);
+                    while ( my $nBytes = read($filehandle, my $buffer, 1024) ) {
+                        print $OUTFILE $buffer;
+                    }
+                    close($OUTFILE);
+
+                    resize("$imgDir/$basename", $imgDir);
+
+                    my $name = "img";
+                    my $mime = "jpg";
+                    if ($basename =~ /[\/\\]*([a-zA-Z0-9-_ ]*)\.([a-z]+)$/i) {
+                        $name = $1;
+                        $mime = $2;
+                    }
+
+                    $dir = "/$year/$mon";
+
+                }
+
+                my $parent = "";
+                my $hasParent = 0;
+                if ($dir =~ /(.*)[\/\\].+?$/) {
+                    $parent = $1;
+                    $hasParent = 1;
+                }
+
+                opendir(DIR, "../content/images/$dir") or die $!;
+
+                my $dirs = [];
+                my $files = [];
+                my @sizes = map {
+                    {
+                        size => $_
+                    }
+                } keys @{ $self->{config}->{sizes} };
+
+                while (my $file = readdir(DIR)) {
+                    next if ($file =~ /^\./); #ignore hidden files
+
+                    if (-d "../content/images/$dir/$file") {
+                        push(@{ $dirs }, {
+                            dir => $dir,
+                            file => $file
+                        });
+                    } elsif ($file =~ /^([a-zA-Z0-9-_ ]*)\.([a-z]+)$/i) {
+                        my $name = $1;
+
+                        next if (!(-e "../content/images/$dir/$name-thumbnail.jpg")); #ignore resized images
+
+                        push(@{ $files }, {
+                            name => $name,
+                            dir => $dir,
+                            file => $file,
+                            sizes => \@sizes
+                        });
+                    }
+
+                }
+
+                closedir(DIR);
+
+                my $template = HTML::Template->new(
+                    filename => "$templateDir/uploader.html",
+                    die_on_bad_params =>  0
+                );
+                $template->param({
+                    root => $root,
+                    parent => $parent,
+                    hasParent => $hasParent,
+                    dirs => $dirs,
+                    files => $files
+                });
+                print $template->output;
+
+            } elsif ($query->url_param("edit") && -e "../content/" . $query->url_param("edit")) {
 
                 my $url = $query->url_param("edit");
                 if ($url eq "index.html") {
