@@ -215,6 +215,7 @@ sub run {
                 my $hasParent = 0;
                 if ($dir =~ /(.*)[\/\\].+?$/) {
                     $parent = $1;
+                    print "Parent: $parent\n";
                     $hasParent = 1;
                 }
 
