@@ -105,7 +105,7 @@ sub run {
 
     while (my $query = CGI::Fast->new) {
 
-        my $root = do 'root.pl';
+        my $root = $self->{config}->{root};
 
         my $loggedIn = 0;
         my $templateDir = "templates";
@@ -147,12 +147,11 @@ sub run {
             my $source = "../content/$category/$slug.html";
             open my $content, ">", $source or die "Can't open $source: $!";
             print $content
-            "<!--
-            \"title\": \"$title\",
-            \"category\": \"$category\",
-            \"date\": \"$date\"
-            -->
-            ";
+"<!--
+\t\"title\": \"$title\",
+\t\"category\": \"$category\",
+\t\"date\": \"$date\"
+-->";
             close $content;
 
             print $query->redirect("$root/admin/?edit=$category/$slug.html");
