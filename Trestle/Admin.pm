@@ -12,6 +12,7 @@ use HTML::Template;
 use Encode;
 use Git::Wrapper;
 use Date::Simple qw(date today);
+use GD;
 use strict;
 
 
@@ -48,10 +49,10 @@ sub resize {
         } elsif (lc($mime) eq "png") {
             $img = GD::Image->newFromPng($file);
         }
-
         my ($w,$h) = $img->getBounds(); # find dimensions
 
-        for my $size (keys @{ $self->{config}->{sizes} }) {
+
+        for my $size (keys $self->{config}->{sizes}) {
             if ($w < $self->{config}->{sizes}->{$size}->{width} && $h < $self->{config}->{sizes}->{$size}->{height}) {
                 next;
             }
@@ -199,7 +200,7 @@ sub run {
                     }
                     close($OUTFILE);
 
-                    resize("$imgDir/$basename", $imgDir);
+                    $self->resize("$imgDir/$basename", $imgDir);
 
                     my $name = "img";
                     my $mime = "jpg";
@@ -256,7 +257,8 @@ sub run {
 
                 my $template = HTML::Template->new(
                     filename => "$templateDir/uploader.html",
-                    die_on_bad_params =>  0
+                    die_on_bad_params =>  0,
+                    global_vars => 1
                 );
                 $template->param({
                     parent => $parent,
