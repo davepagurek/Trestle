@@ -148,9 +148,11 @@ sub run {
             open my $content, ">", $source or die "Can't open $source: $!";
             print $content
 "<!--
+{
 \t\"title\": \"$title\",
 \t\"category\": \"$category\",
 \t\"date\": \"$date\"
+}
 -->";
             close $content;
 
