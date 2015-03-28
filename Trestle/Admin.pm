@@ -10,6 +10,7 @@ use File::Path qw(rmtree);
 use HTML::Entities;
 use HTML::Template;
 use Encode;
+use Git::Wrapper;
 use Date::Simple qw(date today);
 use strict;
 
@@ -329,19 +330,15 @@ sub run {
                     $message = "Commit successful.";
                 }
                 if ($query->param("sync_changes") && $query->param("sync_changes") eq "true") {
+
                     chdir('../content');
                     my $remote = qx(git config --get remote.origin.url);
                     $remote =~ s/https:\/\//https:\/\/$self->{config}->{gitusername}:$self->{config}->{gitpassword}\@/;
-
-                    my $out =  qx(git push $remote master 2>&1);
-                    my $rc = $?;
+                    qx(git pull);
+                    my $out =  qx(git push --repo $remote);
                     chdir('../admin');
 
-                    if ($rc == 0) {
-                        $message = "Sync complete.";
-                    } else {
-                        $message = "Sync error: $out";
-                    }
+                    $message = "Sync complete.";
                 }
 
                 #Make file list
