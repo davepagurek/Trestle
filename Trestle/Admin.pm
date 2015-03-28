@@ -10,7 +10,6 @@ use File::Path qw(rmtree);
 use HTML::Entities;
 use HTML::Template;
 use Encode;
-use Git::Wrapper;
 use Date::Simple qw(date today);
 use strict;
 
@@ -318,29 +317,22 @@ sub run {
                     $message = "Server set to restart on next request.";
                 }
                 if ($query->param("commit_changes") && $query->param("commit_changes") eq "true" && $query->param("commit_message")) {
-                    my $git = Git::Wrapper->new('../content');
-                    $git->add({ all => 1 });
+                    my $commitMessage = $query->param("commit_message");
 
                     chdir('../content');
                     qx(git config user.name "$self->{config}->{gitname}");
                     qx(git config user.email "$self->{config}->{gitemail}");
+                    qx(git add --all);
+                    qx(git commit -am "$commitMessage");
                     chdir('../admin');
 
-                    $git->commit({
-                            message => $query->param("commit_message"),
-                            all => 1
-                        });
                     $message = "Commit successful.";
                 }
                 if ($query->param("sync_changes") && $query->param("sync_changes") eq "true") {
-                    my $git = Git::Wrapper->new('../content');
-                    $git->pull();
-                    #my @changes = $git->status->get("indexed");
-                    #if (scalar @changes > 0) {
-                    my $remote = ($git->config("remote.origin.url") )[0];
+                    chdir('../content');
+                    my $remote = qx(git config --get remote.origin.url);
                     $remote =~ s/https:\/\//https:\/\/$self->{config}->{gitusername}:$self->{config}->{gitpassword}\@/;
 
-                    chdir('../content');
                     my $out =  qx(git push $remote master 2>&1);
                     my $rc = $?;
                     chdir('../admin');
