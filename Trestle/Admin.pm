@@ -321,6 +321,12 @@ sub run {
                     close($rebuild);
                     $message = "Server set to restart on next request.";
                 }
+                if ($query->param("restart_admin") && $query->param("restart_admin") eq "true") {
+                    open (my $rebuild, ">", "rebuild") or die "Could not open rebuild: $!";
+                    print $rebuild "1";
+                    close($rebuild);
+                    $message = "Reload the dashboard to restart Trestle Admin.";
+                }
                 if ($query->param("commit_changes") && $query->param("commit_changes") eq "true" && $query->param("commit_message")) {
                     my $commitMessage = $query->param("commit_message");
 
@@ -336,13 +342,21 @@ sub run {
                 if ($query->param("sync_changes") && $query->param("sync_changes") eq "true") {
 
                     chdir('../content');
-                    my $remote = qx(git config --get remote.origin.url);
-                    $remote =~ s/https:\/\//https:\/\/$self->{config}->{gitusername}:$self->{config}->{gitpassword}\@/;
                     qx(git pull);
-                    my $out =  qx(git push --repo $remote);
-                    chdir('../admin');
+                    my $remote = qx(git config --get remote.origin.url);
+                    unless ($remote =~ /$self->{config}->{gitpassword}/) {
+                        $remote =~ s/https:\/\//https:\/\/$self->{config}->{gitusername}:$self->{config}->{gitpassword}\@/;
+                        qx(git remote set-url origin $remote);
+                    }
 
-                    $message = "Sync complete.";
+                    qx(git push);
+                    #while (qx(git status) =~ /ahead of/) {
+                        #print qx(git push $remote master --porcelain);
+                    #}
+
+                    $message = qx(git status);
+
+                    chdir('../admin');
                 }
 
                 #Make file list
@@ -413,6 +427,10 @@ sub run {
                 });
             print $template->output;
 
+        }
+        if (-e "rebuild") {
+            unlink "rebuild" or die "Unable to unlink rebuild: $!";
+            last;
         }
 
     }
