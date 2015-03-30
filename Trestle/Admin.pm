@@ -224,11 +224,7 @@ sub run {
 
                 my $dirs = [];
                 my $files = [];
-                my @sizes = map {
-                    {
-                        size => $_
-                    }
-                } keys $self->{config}->{sizes};
+
 
                 while (my $file = readdir(DIR)) {
                     next if ($file =~ /^\./); #ignore hidden files
@@ -242,6 +238,18 @@ sub run {
                         my $name = $1;
 
                         next if (!(-e "../content/images/$dir/$name-thumbnail.jpg")); #ignore resized images
+
+                        my @sizes = keys $self->{config}->{sizes};
+                        for my $size (keys $self->{config}->{sizes}) {
+                            unless (-e "../content/images$dir/$name-$size.jpg") {
+                                @sizes = grep { ! /^$size\b/ } @sizes;
+                            }
+                        }
+                        @sizes = map {
+                            {
+                                size => $_
+                            }
+                        } @sizes;
 
                         push(@{ $files }, {
                             name => $name,
