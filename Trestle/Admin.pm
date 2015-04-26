@@ -10,7 +10,6 @@ use File::Path qw(rmtree);
 use HTML::Entities;
 use HTML::Template;
 use Encode;
-use Git::Wrapper;
 use Date::Simple qw(date today);
 use GD;
 use strict;
