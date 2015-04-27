@@ -2,7 +2,9 @@
 
 <div class="content">
     <h1><TMPL_VAR NAME="title"></h1>
-    <h4><TMPL_VAR NAME="date"></h4>
+    <TMPL_LOOP NAME="date">
+    <div class='date'><TMPL_VAR NAME="mday"> <TMPL_VAR NAME="fullmonth">, <TMPL_VAR NAME="year"></div>
+    </TMPL_LOOP>
 
     <TMPL_VAR NAME="content">
 </div>

@@ -3,8 +3,10 @@
 <h1><TMPL_VAR NAME="title"></h1>
 <TMPL_LOOP NAME="pages">
 <div class="post">
-    <h3><a href="<TMPL_VAR NAME='url'>"<TMPL_VAR NAME="title"></a></h3>
-    <h4><TMPL_VAR NAME="date"></h4>
+    <h3><a href="<TMPL_VAR NAME='url'>"><TMPL_VAR NAME="title"></a></h3>
+    <TMPL_LOOP NAME="date">
+    <div class='date'><TMPL_VAR NAME="mday"> <TMPL_VAR NAME="fullmonth">, <TMPL_VAR NAME="year"></div>
+    </TMPL_LOOP>
     <p><TMPL_VAR NAME="excerpt"></p>
 </div>
 </TMPL_LOOP>
