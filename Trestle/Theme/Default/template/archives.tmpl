@@ -1,0 +1,15 @@
+<TMPL_INCLUDE NAME="header.tmpl">
+
+<h1>Archives</h1>
+<TMPL_LOOP NAME="categories">
+<h2><TMPL_VAR NAME="name"></h2>
+
+<TMPL_LOOP NAME="pages">
+<div class="post">
+    <h3><a href="<TMPL_VAR NAME='url'>"<TMPL_VAR NAME="title"></a></h3>
+    <h4><TMPL_VAR NAME="date"></h4>
+    <p><TMPL_VAR NAME="excerpt"></p>
+</div>
+</TMPL_LOOP>
+</TMPL_LOOP>
+<TMPL_INCLUDE NAME="footer.tmpl">
