@@ -1,0 +1,20 @@
+<!--
+{
+	"title": "Hello, World!",
+	"date": "2014-08-09",
+	"excerpt": "My first post in Trestle.",
+	"category": "blog"
+}
+-->
+
+In Trestle, making posts is easy! Metadata is simply a JSON structure in a comment at the top of your HTML file.
+
+Paragraphing is done automatically. You can even add code:
+<code lang="perl">
+use File::Slurp;
+my $dictionary = read_file("words.txt");
+chomp(my $input = <STDIN>);
+my $regexText = "^[$input]+\$";
+my @matches = $dictionary =~ /$regexText/igm;
+print join("\n", @matches) . "\n";
+</code>

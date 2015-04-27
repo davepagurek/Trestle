@@ -4,7 +4,9 @@ use HTML::Template;
 
 sub new {
     my $class = shift;
+    my $siteName = shift;
     my $self = {};
+    $self->{siteName} = $siteName;
 
     bless $self, $class;
     return $self;
@@ -41,6 +43,7 @@ sub render {
     );
 
     $values = $self->removeUndef($values);
+    $values->{siteName} = $self->{siteName} if $self->{siteName};
 
     for my $key (keys %$values) {
         if (defined $values->{$key}) {

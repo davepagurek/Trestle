@@ -7,9 +7,10 @@ use Trestle::Theme;
 
 sub new {
     my $class = shift;
+    my $siteName = shift;
     my $self = {
         dir => "Trestle/Theme/Default",
-        theme => Trestle::Theme->new()
+        theme => Trestle::Theme->new($siteName)
     };
 
     bless $self, $class;

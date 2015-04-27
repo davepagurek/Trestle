@@ -11,7 +11,7 @@ use Trestle::Plugin::ImageCaption;
 my $site = Trestle->new({
 	dev => 1,
     root => "http://localhost/Trestle",
-    theme => Trestle::Theme::Default->new(),
+    theme => Trestle::Theme::Default->new("Trestle Blog"),
     plugins => [
         Trestle::Plugin::CodePrettify->new("tomorrow-night"),
         Trestle::Plugin::GoogleAnalytics->new("UA-8777691-3"),

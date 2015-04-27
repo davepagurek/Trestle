@@ -1,8 +1,8 @@
 content/*
 !content/.htaccess
-content-old/
+!content/blog
+!content/index.html
 cache/
-scraper.pl
 admin/credentials.pl
 
 #################
