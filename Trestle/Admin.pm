@@ -351,13 +351,15 @@ sub run {
 
                     chdir('../content');
                     qx(git pull);
-                    my $remote = qx(git config --get remote.origin.url);
-                    unless ($remote =~ /$self->{config}->{gitpassword}/) {
-                        $remote =~ s/https:\/\//https:\/\/$self->{config}->{gitusername}:$self->{config}->{gitpassword}\@/;
-                        qx(git remote set-url origin $remote);
+                    if ($self->{config}->{gitprotocol} eq "SSH") {
+                        my $remote = qx(git config --get remote.origin.url);
+                        unless ($remote =~ /$self->{config}->{gitpassword}/) {
+                            $remote =~ s/https:\/\//https:\/\/$self->{config}->{gitusername}:$self->{config}->{gitpassword}\@/;
+                            qx(git remote set-url origin $remote);
+                        }
                     }
 
-                    qx(git push);
+                    qx(git push origin master);
                     #while (qx(git status) =~ /ahead of/) {
                         #print qx(git push $remote master --porcelain);
                     #}

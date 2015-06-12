@@ -595,7 +595,7 @@ span.code {
     -webkit-border-radius:4px;
     font-size:0.85em;
     padding:0.2em;
-    vertical-align:middle;
+    vertical-align:top;
     word-wrap: normal;
 }
 
