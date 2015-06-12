@@ -1,10 +1,20 @@
 RewriteEngine on
+<<<<<<< HEAD
 
 #Use this if your Apache setup supports mod_fcgid
 #AddHandler fcgid-script .fcgi
 
 #Use this if you want to run Trestle as normal cgi
 AddHandler cgi-script .fcgi
+=======
+Options +ExecCGI
+
+#Use this if your Apache setup supports mod_fcgid
+AddHandler fcgid-script .fcgi
+
+#Use this if you want to run Trestle as normal cgi
+#AddHandler cgi-script .fcgi
+>>>>>>> 4f0857a9935c11b3a35502555d7798a54bb3f5d7
 
 DirectoryIndex index.fcgi index.pl index.php index.html
 RewriteCond %{REQUEST_FILENAME} !-f
