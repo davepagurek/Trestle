@@ -11,6 +11,7 @@ my $admin = Trestle::Admin->new({
     password => "test",
     gitname => "John Doe",
     gitemail => "test\@test.com",
+    gitprotocol => "HTTPS",
     gitusername => "johndoe",
     gitpassword => "test",
     key => "test346374725762572457F",

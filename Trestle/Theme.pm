@@ -4,7 +4,8 @@ use HTML::Template;
 
 sub new {
     my $class = shift;
-    my $siteName = shift;
+    my $self = {};
+    my $siteName = shift || "";
     my $self = {};
     $self->{siteName} = $siteName;
 
