@@ -17,6 +17,22 @@ Admin interface:
 </ul>
 
 <h2>Setup</h2>
+<h3>Installation</h3>
+Using cpanm, run:
+```
+cpanm --installdeps .
+```
+
+This requires libgd to work. If it is not already installed install it:
+```
+#OSX
+brew install libgd
+
+#Ubuntu
+sudo apt-get -y install libgd2-xpm-dev build-essential
+```
+Install dependencies with cpanm again after libgd is installed.
+
 <h3>Trestle config</h3>
 Here is an example `index.fcgi`:
 
