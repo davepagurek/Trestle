@@ -113,7 +113,7 @@ sub run {
         my @files = ();
         my $dirs = {};
 
-        my $session = new CGI::Session("driver:File", $query, {Directory=>'/tmp'});
+        my $session = new CGI::Session("driver:File", $query, {Directory=>"/tmp"});
         my $message = "";
 
         if ($query->param("log_out")) {
@@ -350,7 +350,7 @@ sub run {
 
                     chdir('../content');
                     qx(git pull);
-                    if ($self->{config}->{gitprotocol} eq "SSH") {
+                    if ($self->{config}->{gitprotocol} eq "HTTPS") {
                         my $remote = qx(git config --get remote.origin.url);
                         unless ($remote =~ /$self->{config}->{gitpassword}/) {
                             $remote =~ s/https:\/\//https:\/\/$self->{config}->{gitusername}:$self->{config}->{gitpassword}\@/;
@@ -358,7 +358,7 @@ sub run {
                         }
                     }
 
-                    qx(git push origin master);
+                    qx(git push --porcelain);
                     #while (qx(git status) =~ /ahead of/) {
                         #print qx(git push $remote master --porcelain);
                     #}

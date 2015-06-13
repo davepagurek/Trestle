@@ -10,7 +10,7 @@ use Trestle::Plugin::ImageCaption;
 
 my $site = Trestle->new({
 	dev => 1,
-    root => "http://localhost/Trestle",
+    root => "http://localhost:8080/Trestle",
     theme => Trestle::Theme::Pahgawks->new(),
     plugins => [
         Trestle::Plugin::CodePrettify->new("tomorrow-night"),
