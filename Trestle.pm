@@ -7,6 +7,8 @@ package Trestle {
     use Trestle::Category;
     use Trestle::Theme;
 
+    use strict;
+    use warnings;
     use Moose;
 
     has "dev" => (
