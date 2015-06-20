@@ -1,3 +1,4 @@
+requires 'Moose';
 requires 'FCGI';
 requires 'JSON';
 requires 'HTML::Template';
