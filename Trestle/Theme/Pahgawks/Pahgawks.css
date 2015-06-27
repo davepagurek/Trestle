@@ -453,13 +453,58 @@ img.art {
     font-size:30px;
 }
 #header {
-    background-color:#c0392b;
-    background-image: url(http://www.davepagurek.com/wp-content/uploads/2014/08/cliffs-blurred.jpg);
+    background-color:#222;
     background-size:cover;
     background-position:center;
     color:#FFF;
-    padding-bottom:20px;
+    padding: 0;
     overflow:hidden;
+    position:relative;
+}
+#header.static {
+    background-color:#c0392b;
+    background-image: url(http://www.davepagurek.com/wp-content/uploads/2014/08/cliffs-blurred.jpg);
+}
+#header #landscape {
+    position:absolute;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+}
+#header #landscapeInfo {
+    padding:10px;
+    margin:20px auto;
+    color: #FFF;
+}
+#header #landscapeInfo a {
+    color:#f96e5e;
+}
+#header #landscapeInfo a:hover {
+    color:#ff8e7e;
+}
+#header #overlay.transparent {
+    background-color:rgba(0, 0, 0, 0.5);
+}
+#header #overlay {
+    position:absolute;
+    top:0;
+    left:0;
+    right:0;
+    bottom:0;
+    transition: all ease-in-out 0.7s;
+    background-color:rgba(0, 0, 0, 1);
+}
+#header #overlay.transparent:hover {
+    background-color:rgba(0, 0, 0, 0);
+}
+#header #overlay.transparent:hover + #whoami {
+    opacity:0;
+}
+#whoami {
+    margin:120px 40px 120px 40px;
+    position:relative;
+    transition: all ease-in-out 0.7s;
 }
 #header h1, #header h2, #header p {
     text-align:center;
