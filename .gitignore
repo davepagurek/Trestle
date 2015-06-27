@@ -3,4 +3,5 @@ content-example
 !content/.htaccess
 cache/
 admin/index.fcgi
+Frontier/
 

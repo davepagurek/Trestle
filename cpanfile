@@ -1,8 +1,11 @@
 requires 'Moose';
 requires 'FCGI';
 requires 'JSON';
+requires 'HTML::Entities';
 requires 'HTML::Template';
 requires 'String::Unescape';
 requires 'CGI::Session';
 requires 'Date::Simple';
 requires 'GD';
+requires 'File::Find';
+requires 'IPC::System::Simple';

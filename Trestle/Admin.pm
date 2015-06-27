@@ -12,8 +12,8 @@ use HTML::Template;
 use Encode;
 use Date::Simple qw(date today);
 use GD;
+use IPC::System::Simple qw(capture);
 use strict;
-
 
 
 
@@ -338,32 +338,29 @@ sub run {
                     my $commitMessage = $query->param("commit_message");
 
                     chdir('../content');
-                    qx(git config user.name "$self->{config}->{gitname}");
-                    qx(git config user.email "$self->{config}->{gitemail}");
-                    qx(git add --all);
-                    qx(git commit -am "$commitMessage");
+                    capture("git", "config", "user.name" => $self->{config}->{gitname});
+                    capture("git", "config", "user.email" => $self->{config}->{gitemail});
+                    capture("git", "add", "--all");
+                    capture("git", "commit", "-m" => $commitMessage);
                     chdir('../admin');
 
-                    $message = "Commit successful.";
+                    $message = capture("git status");
                 }
                 if ($query->param("sync_changes") && $query->param("sync_changes") eq "true") {
 
                     chdir('../content');
-                    qx(git pull);
+                    capture("git", "pull");
                     if ($self->{config}->{gitprotocol} eq "HTTPS") {
-                        my $remote = qx(git config --get remote.origin.url);
+                        my $remote = capture("git", "config", "--get" => "remote.origin.url");
                         unless ($remote =~ /$self->{config}->{gitpassword}/) {
                             $remote =~ s/https:\/\//https:\/\/$self->{config}->{gitusername}:$self->{config}->{gitpassword}\@/;
-                            qx(git remote set-url origin $remote);
+                            capture("git", "remote", "set-url", "origin" => $remote);
                         }
                     }
 
-                    qx(git push --porcelain);
-                    #while (qx(git status) =~ /ahead of/) {
-                        #print qx(git push $remote master --porcelain);
-                    #}
+                    capture("git", "push", "--porcelain");
 
-                    $message = qx(git status);
+                    $message = capture("git status");
 
                     chdir('../admin');
                 }
