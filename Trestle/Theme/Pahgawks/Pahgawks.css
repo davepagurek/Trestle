@@ -453,7 +453,7 @@ img.art {
     font-size:30px;
 }
 #header {
-    background-color:#222;
+    background-color:#ecf0f1;
     background-size:cover;
     background-position:center;
     color:#FFF;
@@ -494,12 +494,6 @@ img.art {
     bottom:0;
     transition: all ease-in-out 0.7s;
     background-color:rgba(0, 0, 0, 1);
-}
-#header #overlay.transparent:hover {
-    background-color:rgba(0, 0, 0, 0);
-}
-#header #overlay.transparent:hover + #whoami {
-    opacity:0;
 }
 #whoami {
     margin:120px 40px 120px 40px;
@@ -645,6 +639,14 @@ span.code {
 }
 
 /* Responsive */
+@media all and (min-width: 600px) {
+    #header #overlay.transparent:hover {
+        background-color:rgba(0, 0, 0, 0);
+    }
+    #header #overlay.transparent:hover + #whoami {
+        opacity:0;
+    }
+}
 @media all and (max-width: 1300px) {
     .wrapper {
         width:100%;
