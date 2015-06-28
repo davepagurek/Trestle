@@ -25,7 +25,7 @@ sub new {
     my @pages = ();
     foreach my $pageFile (glob("$sourceDir/*.html")) {
         $pageFile =~ s/\/+/\//g;
-        push(@pages, Trestle::Page->new($pageFile, $self->{root}, 1));
+        push(@pages, Trestle::Page->new(source => $pageFile, root => $self->{root}, onlyMeta => 1));
     }
 
     #Sort the pages in reverse chronological order by release date

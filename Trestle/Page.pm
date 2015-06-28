@@ -7,30 +7,217 @@ package Trestle::Page {
     use warnings;
     use Moose;
 
-    has "meta" => (
+    has "_meta" => (
         is => "ro",
-        isa => "Hashref"
+        isa => "HashRef",
+        init_arg => undef,
+        writer => "_setMeta"
     );
 
     has "source" => (
         is => "ro",
-        isa => "Str"
+        isa => "Str",
+        required => 1
+    );
+
+    has "url" => (
+        is => "ro",
+        isa => "Str",
+        init_arg => undef,
+        writer => "_setURL"
     );
 
     has "root" => (
         is => "ro",
-        isa => "Str"
+        isa => "Str",
+        required => 1
     );
 
     has "onlyMeta" => (
         is => "ro",
         isa => "Bool",
-        default => sub{ 0 }
+        default => 0
     );
 
+    has "content" => (
+        is => "ro",
+        isa => "Str",
+        init_arg => undef,
+        default => "",
+        writer => "_setContent"
+    );
+
+    sub _pushContent {
+        my ($self, @newContent) = @_;
+        my $line = "";
+        for my $content (@newContent) {
+            $line .= $content;
+        }
+        $self->_setContent($self->content . $line);
+    }
+
+    sub _asCode {
+        my ($self, $line) = @_;
+        return CGI::escapeHTML($line);
+    }
+
+    sub _asText {
+        my ($self, $line) = @_;
+        #Remove extra whitespace
+        $line =~ s/
+            ^\s+    #Whitespace at the beginning of a line
+            |
+            \s+$    #Whitespace at the end of a line
+        //xg;
+
+        return "" if $line eq "";
+
+        #Convert %root%
+        $line =~ s/\%root\%/$self->root/eg;
+
+        #If paragraphing is disabled or the line is already in a tag
+        if (($self->meta("paragraph") && $self->meta("paragraph") eq "false") || $line =~ /
+            (?:
+                ^<(?:h(?:[0-9]+)|ul|li|table|th|tr|td|p).*> #Tag at beginning of line
+            )
+            |
+            (?:
+                <\/(?:h(?:[0-9]+)|ul|li|table|th|tr|td|p)>$ #Closing tag at end of line
+            )
+        /ix) {
+            return $line;
+
+        #Handle inline code snippets
+        } elsif ($line =~ /(.*`)(.*)(`.*)/) {
+
+            #Replace all occurrences with their escaped versions
+            $line =~ s/(.*?`)(.*?)(`.*?)/$1 . $self->_asCode($2) . $3/eig;
+            return "<p>$line</p>";
+
+        #otherwise, wrap in a p tag
+        } else {
+            return "<p>$line</p>";
+        }
+    }
+
+    sub _parseMeta {
+        my ($self, $page) = @_;
+        my $metaSource = "";
+
+        while (my $line = <$page>) {
+            chomp $line;
+            #Ignore beginning comment tag
+            next if $line =~ /<!--$/;
+            last if $line =~ /^-->/;
+
+            #Replace %root% with the actual server root
+            $line =~ s/\%root\%/$self->root/eg;
+
+            #Add the line
+            $metaSource .= $line . "\n";
+        }
+
+        #Create a hashref out of the meta JSON info
+        my $metaJSON = decode_json($metaSource);
+        if ($metaJSON->{date}) {
+            $metaJSON->{date} = $self->_timeFormat($metaJSON->{date});
+        }
+        $self->_setMeta($metaJSON);
+    }
+
+    sub _parseBody {
+        my ($self, $page) = @_;
+        while (my $line = <$page>) {
+            chomp $line;
+
+            #We're reading line by line, so if we encounter a newline it is a problem and should be removed
+            $line =~ s/\n//g;
+
+            next if $line eq "";
+
+            #If it's in a code tag, don't format innards
+            if (my ($start, $openTag, $code, $closeTag, $end) = $line =~ /
+                (.*)                    #Normal text
+                (<(?:code|pre).*?>)     #Code tag
+                (.*)                    #Code snippet
+                (<\/(?:code|pre)>)      #Closing code tag
+                (.*)                    #Normal text
+            /x) {
+                $self->_pushContent(
+                    $self->_asText($start),
+                    $openTag,
+                    $self->_asCode($code),
+                    $closeTag,
+                    $self->_asText($end),
+                    "\n"
+                );
+
+            } elsif (($start, $openTag, $code) = $line =~ /
+                (.*)                #Normal text
+                (<(?:code|pre).*?>) #Code tag
+                (.*)                #Code
+            /x) {
+                $self->_pushContent(
+                    $self->_asText($start),
+                    $openTag,
+                    $self->_asCode($code),
+                    $self->_asCode($code) ? "\n" : ""
+                );
+
+                #Keep parsing until the end of the code block is found
+                CODE: while (my $codeLine = <$page>) {
+                    chomp $codeLine;
+
+                    #We're reading line by line, so if we encounter a newline it is a problem and should be removed
+                    $codeLine =~ s/\n//g;
+
+                    next if $codeLine eq "";
+
+                    if (($code, $closeTag, $end) = $codeLine =~ /
+                        (.*)                #Code
+                        (<\/(?:code|pre)>)  #Closing code tag
+                        (.*)                #Normal text
+                    /x) {
+                        $self->_pushContent(
+                            $self->_asCode($code),
+                            $closeTag,
+                            $self->_asText($end),
+                            "\n"
+                        );
+                        last CODE;
+                    } else {
+                        $self->_pushContent($self->_asCode($codeLine), "\n");
+                    }
+                }
+            } else {
+                $self->_pushContent($self->_asText($line), "\n");
+            }
+        }
+    }
+
+    sub BUILD {
+        my $self = shift;
+
+        die "Source does not exist: $self->source" unless -e $self->source;
+
+        #Get the proper url of the source file on the server
+        my ($pageName) = $self->source =~ /^content\/(.*)\.html$/;
+        $self->_setURL($self->root . "/" . $pageName);
+
+        my $cgi = CGI->new();
+        my $json = JSON->new->allow_nonref;
+
+        open my $page, "<", $self->source or die "Can't open $self->source: $!";
+
+        $self->_parseMeta($page);
+        $self->_parseBody($page) unless $self->onlyMeta;
+
+        close $page or die "can't read close '$page': $!";
+    }
+
     #Convert a yyy-mm-dd date string to a hashref with date components
-    sub timeFormat {
-        my ($timeStr) = @_;
+    sub _timeFormat {
+        my ($self, $timeStr) = @_;
         my $time = {};
         my $months = {
             1 => "January",
@@ -56,151 +243,10 @@ package Trestle::Page {
         return $time;
     }
 
-    sub new {
-        my $self = { };
-
-        my $class = shift;
-        my $source = shift;
-        my $root = shift;
-        my $onlyMeta = shift;
-
-        #Get the proper url of the source file on the server
-        my $url = $source;
-        $url =~ s/^content\/(.*).html$/$root\/$1/;
-
-        #Set public properties
-        $self->{source} = $source;
-        $self->{url} = $url;
-        $self->{root} = $root;
-
-        my $cgi = CGI->new();
-        my $json = JSON->new->allow_nonref;
-
-        if (-e $source) {
-            open my $page, "<", $source or die "Can't open $source: $!";
-            my $meta = 0;
-            my $metaSource = "";
-            my $content = "";
-            my $isCode = 0;
-
-            #Read the source file
-            while (<$page>) {
-                chomp;
-                my $line = $_;
-
-                #We're reading line by line, so if we encounter a newline it is a problem and should be removed
-                $line =~ s/\n//g;
-
-                #If we're not reading a code snippet, remove proceeding whitespace
-                if (!$isCode) {
-                    $line =~ s/^\s+|\s+$//g;
-                }
-
-                #If we encounter the beginning of the meta information HTML comment, go to meta mode
-                if (!$isCode && $line =~ /<!--$/) {
-                    $meta = 1;
-                    next;
-                }
-
-                #ignore blank lines if not code
-                if (!$line && !$isCode) {
-                    next;
-
-                    #If we're in meta mode
-                } elsif ($meta) {
-
-                    #If we encounter the end of the meta comment block
-                    if ($line =~ /^-->/) {
-                        $meta = 0;
-
-                        #Create a hashref out of the meta JSON info
-                        my $metaJSON = $json->decode($metaSource);
-                        foreach my $key (keys %$metaJSON) {
-                            $self->{$key} = $metaJSON->{$key};
-                        }
-                        if ($self->{date}) {
-                            $self->{date} = timeFormat($self->{date});
-                        }
-
-                        #If we are on a category page and don't need the actual post content, stop reading the rest
-                        if ($onlyMeta) {
-                            last;
-                        }
-
-                        #Keep building up the meta string if we aren't at the end yet
-                    } else {
-
-                        #Replace %root% with the actual server root
-                        $line =~ s/\%root\%/$root/g;
-
-                        #Add the line
-                        $metaSource .= $line . "\n";
-                    }
-                } else {
-
-                    #If it's in a code tag, don't format innards
-                    if ($line =~ /(.*<(?:code|pre).*?>)(.*)(<\/(?:code|pre).*)/) {
-                        my $start = $1;
-                        my $end = $3;
-                        $start =~ s/\%root\%/$root/g;
-                        $end =~ s/\%root\%/$root/g;
-                        $content .= $start . $cgi->escapeHTML($2) . $end . "\n";
-                    } elsif ($line =~ /(.*<(?:code|pre).*?>)(.*)/) {
-                        $isCode = 1;
-                        my $start = $1;
-                        $start =~ s/\%root\%/$root/g;
-                        $content .= $start;
-                        if ($2) {
-                            $content .= $cgi->escapeHTML($2) . "\n";
-                        }
-                    } elsif ($isCode) {
-                        if ($line =~ /(.*)(<\/(?:code|pre).*)/) {
-                            $isCode = 0;
-                            my $end = $2;
-                            $end =~ s/\%root\%/$root/g;
-                            $content .= $cgi->escapeHTML($1) . $end . "\n";
-                        } else {
-                            $content .= $cgi->escapeHTML($line) . "\n";
-                        }
-
-                    #If paragraphing is off or it's in a heading or p tag, don't wrap in a p tag
-                    } elsif (($self->{paragraph} && $self->{paragraph} eq "false") || $line =~ /(?:^<(?:h(?:[0-9]+)|ul|li|table|th|tr|td|p).*>)|(?:<\/(?:h(?:[0-9]+)|ul|li|table|th|tr|td|p)>$)/i) {
-                        $line =~ s/\%root\%/$root/g;
-                        $content .= $line . "\n";
-
-                    } elsif ($line =~ /(.*`)(.*)(`.*)/) {
-                        $line =~ s/(.*?`)(.*?)(`.*?)/$1 . $cgi->escapeHTML($2) . $3/eig;
-                        $content .= "<p>$line</p>\n";
-
-                    #otherwise, wrap in a p tag
-                    } else {
-                        $line =~ s/\%root\%/$root/g;
-                        $content .= "<p>" . $line . "</p>\n";
-                    }
-                }
-            }
-            close $page or die "can't read close '$page': $!";
-            if (!$onlyMeta) {
-                $self->{content} = $content;
-            }
-        }
-
-        # use Data::Dumper;
-        # print Dumper $self;
-
-        bless $self, $class;
-        return $self;
-    }
-
-    sub content {
-        my ($self) = @_;
-        return $self->{content};
-    }
-
     sub meta {
         my ($self, $value) = @_;
-        if (exists $self->{$value}) {
-            return $self->{$value};
+        if (exists $self->_meta->{$value}) {
+            return $self->_meta->{$value};
         } else {
             return undef;
         }
@@ -208,13 +254,12 @@ package Trestle::Page {
 
     sub template {
         my ($self, $value) = @_;
-        if (exists $self->{$value}) {
-            if (ref($self->{$value}) eq "HASH") {
-                return [ $self->{$value} ];
+        if (exists $self->_meta->{$value}) {
+            if (ref($self->_meta->{$value}) eq "HASH") {
+                return [ $self->_meta->{$value} ];
             } else {
-                return $self->{$value};
+                return $self->_meta->{$value};
             }
-
         } else {
             return undef;
         }

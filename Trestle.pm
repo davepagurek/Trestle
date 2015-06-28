@@ -147,7 +147,10 @@ package Trestle {
         my $self = shift;
 
         #Create index page
-        my $page = Trestle::Page->new("content/index.html", $self->root);
+        my $page = Trestle::Page->new(
+            source => "content/index.html",
+            root => $self->root
+        );
 
         #Get the theme's output for the index page
         my $content = $self->theme->main($page);
@@ -195,7 +198,10 @@ package Trestle {
         my $pageName = shift;
 
         #Create page
-        my $page = Trestle::Page->new("content/" . $pageName . ".html", $self->root);
+        my $page = Trestle::Page->new(
+            source => "content/" . $pageName . ".html",
+            root => $self->root
+        );
 
         #Get the theme's output for the page
         my $content = $self->theme->content($page);

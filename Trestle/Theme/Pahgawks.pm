@@ -29,7 +29,7 @@ sub content {
         isAbout => $page->meta("category") eq "about",
         isBlog => $page->meta("category") eq "blog",
         isPortfolio => !($page->meta("category") eq "about" || $page->meta("category") eq "blog" || $page->meta("category") eq "error"),
-        root => $page->meta("root"),
+        root => $page->root,
         youtube => $page->meta("youtube"),
         header => ($page->meta("browser") || $page->meta("android") || (!$page->meta("youtube") && ($page->meta("embed") || $page->meta("video"))) || $page->meta("buttons") || $page->meta("art"))?1:0,
         art => $page->meta("art"),
@@ -83,7 +83,7 @@ sub dir {
             languages => $languages,
             excerpt => $page->meta("excerpt"),
             thumbnail => $page->meta("thumbnail"),
-            url => $page->meta("url")
+            url => $page->url
         });
     }
 
@@ -140,7 +140,7 @@ sub archives {
                 languages => $languages,
                 excerpt => $page->meta("excerpt"),
                 thumbnail => $page->meta("thumbnail"),
-                url => $page->meta("url")
+                url => $page->url
             });
 
             $pageNum++;
@@ -185,7 +185,7 @@ sub main {
         isAbout => 1,
         isBlog => 0,
         isPortfolio => 0,
-        root => $page->meta("root"),
+        root => $page->root,
     });
 }
 
