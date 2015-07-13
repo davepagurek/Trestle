@@ -148,7 +148,7 @@ p.column {
 #intro {
     display:inline-block;
     vertical-align:middle;
-    margin:0 40px;
+    margin:0 0 0 40px;
     max-width:450px;
 }
 .aligncenter {
