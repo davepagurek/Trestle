@@ -349,7 +349,6 @@ sub run {
                 if ($query->param("sync_changes") && $query->param("sync_changes") eq "true") {
 
                     chdir('../content');
-                    capture("git", "pull");
                     if ($self->{config}->{gitprotocol} eq "HTTPS") {
                         my $remote = capture("git", "config", "--get" => "remote.origin.url");
                         unless ($remote =~ /$self->{config}->{gitpassword}/) {
@@ -357,6 +356,7 @@ sub run {
                             capture("git", "remote", "set-url", "origin" => $remote);
                         }
                     }
+                    capture("git", "pull");
 
                     capture("git", "push", "--porcelain");
 
